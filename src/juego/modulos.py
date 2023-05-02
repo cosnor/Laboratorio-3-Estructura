@@ -174,24 +174,139 @@ class ModuloCablesComplejos(Modulo):
 
 
 class ModuloPalabras(Modulo): 
-    NODOS=[["Lista enlazada 1"],["Lista enlazada 2"], ["Lista enlazada 3"],["Lista enlazada 4"], ["Lista enlazada 5"], ["Lista enlazada 6"],
-                    ["Lista enlazada 7"], ["Lista enlazada 8"], ["Lista enlazada 9"]]
-    def __init__(self, id:str, NODOS) -> None:
+    #Solo una lista. Hacer lista aleatoria que se agrega con nodos
+    def __init__(self) -> None:
         super().__init__()
-        self.id= id
         self.numero_monitor:int = 0
-        self.lista=NODOS[id]
-        self.etapa=1
+        self.lista= None
+        self.etapa= 0
         self.opciones=[1,2,3,4]
         self.seleccion=None
-    def validar(self):
-        pass
-    
-    def seleccionar(self, opcion):
-        pass
+        self.seleccion1 = None
+        self.seleccion2 = None
+        self.seleccion3 = None
+        self.seleccion4 = None
 
-    def avanzar_etapa(self): 
-        self.etapa = self.etapa + 1
+    #Se ejecuta una vez al principio y luego por validar()
+    def pasar_etapa(self): 
+        LISTA_MONITOR = [1, 2]
+        indice_elegido = randint(0,1)
+        self.numero_monitor = LISTA_MONITOR[indice_elegido]
+        self.etapa = self.etapa +1
+        self.agregar_lista()
+
+    
+    def agregar_lista(self): 
+        random.shuffle(self.opciones)
+        self.lista = self.opciones
+
+    def seleccionar(self, posicion: int, opcion: int):
+        self.seleccion = Nodo(posicion, opcion)
+        self.validar(self.etapa)
+
+
+    def validar(self, etapa):
+        if etapa == 1: 
+            if self.numero_monitor == 1: 
+                if self.lista[0] == self.seleccion.etiqueta : 
+                    print("Correcto, pasó a la etapa 2")
+                    self.seleccion1 = self.seleccion
+                    self.pasar_etapa()
+                    self.seleccionar(int, int)
+                else: 
+                    print("Equivocación")
+                    #! Enviar equivocación
+                    #Validar si se equivoca y le quedan errores, volver a seleccionar
+                pass
+            elif self.numero_monitor == 2:
+                if self.lista[0] == self.seleccion.posicion: 
+                    print("Correcto, pasó a la etapa 2")
+                    self.seleccion1 = self.seleccion
+                    self.pasar_etapa()
+                    self.seleccionar(int, int)
+                else: 
+                     print("Equivocación")
+                    #! Enviar equivocación
+                pass
+            else: 
+                print("Error en el número del monitor")
+            
+        elif etapa == 2: 
+            if self.numero_monitor == 1: 
+                if self.seleccion1.etiqueta == self.seleccion.etiqueta : 
+                    print("Correcto, pasó a la etapa 3")
+                    self.seleccion2 = self.seleccion
+                    self.pasar_etapa()
+                    self.seleccionar(int, int)
+                else: 
+                    print("Equivocación")
+                    #! Enviar equivocación
+                    #Validar si se equivoca y le quedan errores, volver a seleccionar
+                pass
+            elif self.numero_monitor == 2:
+                if self.lista[2] == self.seleccion.etiqueta: 
+                    print("Correcto, pasó a la etapa 3")
+                    self.seleccion2 = self.seleccion
+                    self.pasar_etapa()
+                    self.seleccionar(int, int)
+                else: 
+                     print("Equivocación")
+                    #! Enviar equivocación
+                
+            else: 
+                print("Error en el número del monitor")
+
+        elif etapa == 3: 
+            if self.numero_monitor == 1: 
+                if self.lista[3] == self.seleccion.etiqueta : 
+                    print("Correcto, pasó a la etapa 4")
+                    self.seleccion3 = self.seleccion
+                    self.pasar_etapa()
+                    self.seleccionar(int, int)
+                else: 
+                    print("Equivocación")
+                    #! Enviar equivocación
+                    #Validar si se equivoca y le quedan errores, volver a seleccionar
+                pass
+            elif self.numero_monitor == 2:
+                if self.seleccion1.posicion == self.seleccion.posicion: 
+                    print("Correcto, pasó a la etapa 4")
+                    self.seleccion3 = self.seleccion
+                    self.pasar_etapa()
+                    self.seleccionar(int, int)
+                else: 
+                     print("Equivocación")
+                    #! Enviar equivocación
+                pass
+            else: 
+                print("Error en el número del monitor")
+            
+        elif etapa == 4: 
+            if self.numero_monitor == 1: 
+                if self.seleccion1.posicion == self.seleccion.posicion : 
+                    print("Correcto, desactivó el modulo")
+                    self.seleccion4 = self.seleccion
+                    self.pasar_etapa()
+                    
+                else: 
+                    print("Equivocación")
+                    #! Enviar equivocación
+                    #Validar si se equivoca y le quedan errores, volver a seleccionar
+                pass
+            elif self.numero_monitor == 2:
+                if self.lista[2] == self.seleccion.posicion: 
+                    print("Correcto, desactivó el modulo")
+                    self.seleccion2 = self.seleccion
+                    self.pasar_etapa()
+                    
+                else: 
+                     print("Equivocación")
+                    #! Enviar equivocación
+                
+        else: 
+            print("Error en la asignación de etapas")
+    
+    
     
 class ModuloCodigo(Modulo):
     i1 = 0; i2 = 0;  i3 = 0;  i4 = 0; i5 = 0 
@@ -371,3 +486,8 @@ class CableComplejo(Cable):
 class Casilla: 
     def __init__(self, letra:str) -> None:
         self.letra=letra
+
+class Nodo: 
+    def __init__(self, posicion, etiqueta): 
+        self.posicion = posicion
+        self.etiqueta = etiqueta
