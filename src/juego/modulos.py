@@ -8,23 +8,78 @@ class Modulo(ABC):
         self.estado= False #False indica que no ha sido resuelto
 
 class ModuloCablesBasicos(Modulo):
-    def __init__(self) -> None:
+    def __init__(self, franja: str) -> None:
         super().__init__()
         self.cables: List["Cable"]=[]
-    
+        self.franja = franja
+
     def agregar_cables(self):
+        #Asignación aleatoria del orden de los cables
         LISTA_COLORES = ["Rojo", "Azul", "Negro", "Blanco"]
+        random.shuffle(LISTA_COLORES)
         for i in range(0,3):
-            indice_elegido = randint(0,3)
-            self.cables.append(CableBasico(color=LISTA_COLORES[indice_elegido]))
+            self.cables.append(CableBasico(color=LISTA_COLORES[i]))
 
     def cortar_cable(self, CableBasico: object): 
-        CableBasico.set_estado_cortado()
-        self.validacion(CableBasico)
-    
-    def validacion(self):
-        pass 
+        #Validación que modulo esté sin desactivar
+        if self.estado == False: 
+            CableBasico.set_estado_cortado()
+            self.validacion(CableBasico)
+        else: 
+            print ("El modulo ya está desactivado")
 
+    def validacion(self, CableBasico):
+        #Comprobación de que el cable cortado sea el correcto luego de  presionar enviar o cortar un cable
+        if self.franja == "Amarillo": 
+            if self.cables[0].color =="Rojo" and CableBasico.color == "Rojo":  
+                self.estado = True
+                print("Modulo desactivado")
+            elif self.cables[1].color == "Azul" and CableBasico.color == self.cables[2].color:
+                self.estado = True
+                print("Modulo desactivado")
+            elif CableBasico.color == self.cables[3].color:
+                self.estado = True
+                print("Modulo desactivado")
+            else:             
+                print("Equivocación")
+                #! TO DO: Enviar equivocación                
+
+        if self.franja == "Rosado":
+            if self.cables[3].color == "Blanco" and CableBasico.color == "Blanco":
+                self.estado = True
+                print("Modulo desactivado")
+            elif self.cables[2].color == "Azul" and CableBasico.color == self.cables.color[1]:
+                self.estado = True
+                print("Modulo desactivado")
+            elif CableBasico.color == self.cables[2].color:
+                self.estado = True
+                print("Modulo desactivado")
+            else: 
+                print("Equivocación")
+                #! TO DO: Enviar equivocación 
+
+        if self.franja == "Verde":
+            if self.cables[1].color == "Negro" and CableBasico.color == "Negro":
+                self.estado = True
+                print("Modulo desactivado")
+            elif self.cables[3].color == "Negro" and CableBasico.color == "Negro":
+                self.estado = True
+                print("Modulo desactivado")
+            elif CableBasico.color == self.cables[0].color: 
+                self.estado = True
+                print("Modulo desactivado")
+            else: 
+                print("Equivocación")
+                #! TO DO: Enviar equivocación 
+
+        if self.franja == "Blanco": 
+            if CableComplejo == None: 
+                self.estado = True
+                print("Modulo desactivado")
+            else: 
+                print("Equivocación")
+                #! TO DO: Enviar equivocación 
+                
 class ModuloCablesComplejos(Modulo):
     def __init__(self) -> None:
         super().__init__()
