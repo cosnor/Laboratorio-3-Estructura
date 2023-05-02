@@ -73,6 +73,7 @@ class ModuloCablesBasicos(Modulo):
                 #! TO DO: Enviar equivocación 
 
         if self.franja == "Blanco": 
+            #!TO DO: Cambiar a cables normales
             if CableComplejo == None: 
                 self.estado = True
                 print("Modulo desactivado")
@@ -173,7 +174,7 @@ class ModuloCablesComplejos(Modulo):
         self.estado = True
 
 
-class ModuloPalabras(Modulo): 
+class ModuloPalabras(Modulo):  #Caso memoria
     #Solo una lista. Hacer lista aleatoria que se agrega con nodos
     def __init__(self) -> None:
         super().__init__()
@@ -193,12 +194,12 @@ class ModuloPalabras(Modulo):
         indice_elegido = randint(0,1)
         self.numero_monitor = LISTA_MONITOR[indice_elegido]
         self.etapa = self.etapa +1
-        self.agregar_lista()
+        self.agregar_lista() #!Revisar
 
     
     def agregar_lista(self): 
         random.shuffle(self.opciones)
-        self.lista = self.opciones
+        self.lista = self.opciones # Esto no debe pasar 
 
     def seleccionar(self, posicion: int, opcion: int):
         self.seleccion = Nodo(posicion, opcion)
@@ -371,10 +372,10 @@ class ModuloCodigo(Modulo):
 
     def siguiente_posicion(self, columna:int, i1, i2, i3, i4, i5):
         if columna == 1: 
-            if self.casilla1.letra == self.posicion1[-1]: 
+            if self.casilla1.letra == self.posicion1[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
-                self.casilla1.letra = self.posicion1[i1+1]
+                self.casilla1.letra = self.posicion1[i1+1] #! Poner.letra
                 i1+=1
         if columna == 2: 
             if self.casilla2.letra == self.posicion2[-1]: 
@@ -403,14 +404,14 @@ class ModuloCodigo(Modulo):
     
     def anterior_posicion(self, columna:int, i1, i2, i3, i4, i5):
         if columna == 1: 
-            if self.casilla1.letra == self.posicion1[0]: 
+            if self.casilla1.letra == self.posicion1[0].letra: #!Mismo error
                 return "Primera letra alcanzada"
             else: 
                 self.casilla1.letra = self.posicion1[i1-1]
                 i1-=1
         if columna == 2: 
             if self.casilla2.letra == self.posicion2[0]: 
-                return "Ultima letra alcanzada"
+                return "Primera letra alcanzada"
             else: 
                 self.casilla2.letra = self.posicion2[i2-1]
                 i2-=1
@@ -438,7 +439,8 @@ class ModuloExigente(Modulo):
         super().__init__()
         self.estado=False
         self.enunciados = ["", "", "", "", ""]
-        self.opciones = ["V", "F"]
+        self.opciones = ["S", "N"]
+        self.timer = "Aquí va el tiempo"
 
     def activar(self):
         self.estado=True    
@@ -457,7 +459,7 @@ class ModuloExigente(Modulo):
 
 class Cable(ABC):
     def __init__(self) -> None:
-        self.estado=False
+        self.estado=False #False: no ha sido cortado
 
 class CableBasico(Cable):
     def __init__(self, color: str) -> None:
