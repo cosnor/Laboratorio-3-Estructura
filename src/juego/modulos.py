@@ -79,30 +79,99 @@ class ModuloCablesBasicos(Modulo):
             else: 
                 print("Equivocación")
                 #! TO DO: Enviar equivocación 
-                
+
 class ModuloCablesComplejos(Modulo):
     def __init__(self) -> None:
         super().__init__()
         self.cables: List["Cable"]=[]
-    
+
+    #Asignación de cables
     def agregar_cables(self):
-        LISTA_COLORES = ["Naranja", "Morado"]
+        LISTA_COLORES = ["Naranja", "Morado", "Naranja y Morado", "Blanco"]
         for i in range(0,3):
-            indice_elegido = randint(0,1)
+            indice_elegido = randint(0,3)
             self.cables.append(CableComplejo(color=LISTA_COLORES[indice_elegido]))
 
+    #Asignación de la conexión de los cables a A y B
     def conectar_cables(self):
         LISTA_POSICIONES= ["A","B"]
         for cable in self.cables:
             indice_elegido = randint(0,1)
             cable.set_conectado_a(LISTA_POSICIONES[indice_elegido])
 
+    #Asignación LEDs a cables  - False: LED apagado - True: LED encendido 
+    def asignacion_LED(self):
+        LISTA_ESTADO_LED= [True, False]
+        for cable in self.cables:
+            indice_elegido = randint(0,1)
+            cable.set_estado_LED(LISTA_ESTADO_LED[indice_elegido])
+
+    #Función para cortar un cable
     def cortar_cable(self, CableComplejo: object): 
         CableComplejo.set_estado_cortado()
-        self.validacion(CableBasico)
+        self.validacion(CableComplejo)
     
-    def validacion(self):
-        pass 
+    #Se valida al cortar un cable
+    def validacion_cable(self, CableComplejo):
+        if CableComplejo.conectado_a == "A":
+            if CableComplejo.color == "Naranja y Morado" and CableComplejo.LED: 
+                print("Cable cortado con éxito")
+            elif CableComplejo.color == "Morado" and CableComplejo.LED:
+                print("Cable cortado con éxito")
+            elif CableComplejo.color == "Naranja" and CableComplejo.LED == False:
+                print("Cable cortado con éxito")
+            elif CableComplejo.LED and CableComplejo.color =="Blanco": 
+                print("Cable cortado con éxito")
+            else: 
+                print("Equivocación")
+                #!TO DO: Enviar equivocación
+
+        elif CableComplejo.conectado_a == "B":
+            if CableComplejo.color== "Naranja y Morado" and CableComplejo.LED == False:
+                print("Cable cortado con éxito")
+            elif CableComplejo.LED and CableComplejo.color== "Blanco":
+                print("Cable cortado con éxito")
+            elif CableComplejo.color == "Naranja" and CableComplejo.LED == False: 
+                print("Cable cortado con éxito")
+            else: 
+                print("Equivocación")
+                #!TO DO: Enviar equivocación
+
+        else: print("Error en la asignación de cables")
+    
+    #Se valida al presionar enviar
+    def validacion_final(self):
+        for cable in self.cables: 
+            if cable.estado == False: 
+                if cable.conectado_a == "A":
+                    if cable.color== "Naranja y Morado" and cable.LED == False:
+                        return "Equivocación"
+                        #!TO DO: Enviar equivocación
+                    elif cable.LED and cable.color== "Blanco":
+                        return "Equivocación"
+                        #!TO DO: Enviar equivocación
+                    elif cable.color == "Naranja" and cable.LED == False: 
+                        return "Equivocación"
+                        #!TO DO: Enviar equivocación
+                    else: 
+                       print("Cable no cortado correcto")
+                elif cable.conectado_a == "B":
+                    if cable.color== "Naranja y Morado" and cable.LED == False:
+                        return "Equivocación"
+                        #!TO DO: Enviar equivocación
+                    elif cable.LED and cable.color== "Blanco":
+                        return "Equivocación"
+                        #!TO DO: Enviar equivocación
+                    elif cable.color == "Naranja" and cable.LED == False: 
+                        return "Equivocación"
+                        #!TO DO: Enviar equivocación
+                
+                    else: 
+                        print("Cable no cortado correcto")
+        
+        print("Modulo desactivado")
+        self.estado = True
+
 
 class ModuloPalabras(Modulo): 
     NODOS=[["Lista enlazada 1"],["Lista enlazada 2"], ["Lista enlazada 3"],["Lista enlazada 4"], ["Lista enlazada 5"], ["Lista enlazada 6"],
@@ -288,12 +357,16 @@ class CableComplejo(Cable):
         super().__init__()
         self.color= color
         self.conectado_a= None
+        self.LED=None
 
     def set_estado_cortado(self):
         self.estado=True
     
     def set_conectado_a(self, conexion):
         self.conectado_a= conexion
+    
+    def set_estado_LED(self, estado: bool):
+        self.LED = estado
     
 class Casilla: 
     def __init__(self, letra:str) -> None:
