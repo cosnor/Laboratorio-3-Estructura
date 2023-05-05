@@ -5,4 +5,4 @@ class Juego:
         self.registro_bombas = []
 
     def empezar_juego(self, tiempo, errores, modulo): 
-        self.registro_bombas.append(Bomba(tiempo, errores, modulo))
+        self.registro_bombas.append(Bomba(tiempo, errores, modulo, 1))

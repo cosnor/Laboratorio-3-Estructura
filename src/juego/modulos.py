@@ -474,6 +474,7 @@ class ModuloExigente(Modulo):
         self.enunciado = self.enunciados[indice_elegido]
         print(self.enunciado)
 
+    #!Revisar la desactivación
     def desactivar(self):
         self.estado=False
         if self.hilo_temporizador:
