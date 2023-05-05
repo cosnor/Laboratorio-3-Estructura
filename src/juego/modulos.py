@@ -2,6 +2,8 @@ from __future__ import annotations
 from abc import ABC
 from typing import List
 from random import * 
+import time
+import threading
 
 class Modulo(ABC):
     def __init__(self) -> None:
@@ -19,7 +21,7 @@ class ModuloCablesBasicos(Modulo):
         random.shuffle(LISTA_COLORES)
         for i in range(0,3):
             self.cables.append(CableBasico(color=LISTA_COLORES[i]))
-
+        
     def cortar_cable(self, CableBasico: object): 
         #Validación que modulo esté sin desactivar
         if self.estado == False: 
@@ -188,18 +190,17 @@ class ModuloPalabras(Modulo):  #Caso memoria
         self.seleccion3 = None
         self.seleccion4 = None
 
+    def agregar_lista(self): 
+        random.shuffle(self.opciones)
+        self.lista = self.opciones
+
     #Se ejecuta una vez al principio y luego por validar()
     def pasar_etapa(self): 
         LISTA_MONITOR = [1, 2]
         indice_elegido = randint(0,1)
         self.numero_monitor = LISTA_MONITOR[indice_elegido]
         self.etapa = self.etapa +1
-        self.agregar_lista() #!Revisar
-
-    
-    def agregar_lista(self): 
         random.shuffle(self.opciones)
-        self.lista = self.opciones # Esto no debe pasar 
 
     def seleccionar(self, posicion: int, opcion: int):
         self.seleccion = Nodo(posicion, opcion)
@@ -336,7 +337,7 @@ class ModuloCodigo(Modulo):
         self.posicion4.append(Casilla(self.codigo[3]))
         self.posicion5.append(Casilla(self.codigo[4]))
 
-        for i in range(1,4):
+        for i in range(1,6):
             letra = LISTA_LETRAS[randint(0, 24)]
             while(letra == self.codigo[0]):
                 letra = LISTA_LETRAS[randint(0, 24)]
@@ -375,28 +376,28 @@ class ModuloCodigo(Modulo):
             if self.casilla1.letra == self.posicion1[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
-                self.casilla1.letra = self.posicion1[i1+1] #! Poner.letra
+                self.casilla1.letra = self.posicion1[i1+1]
                 i1+=1
         if columna == 2: 
-            if self.casilla2.letra == self.posicion2[-1]: 
+            if self.casilla2.letra == self.posicion2[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla2.letra = self.posicion2[i2+1]
                 i2+=1
         if columna == 3: 
-            if self.casilla3.letra == self.posicion3[-1]: 
+            if self.casilla3.letra == self.posicion3[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla3.letra = self.posicion3[i3+1]
                 i3+=1
         if columna == 4: 
-            if self.casilla4.letra == self.posicion4[-1]: 
+            if self.casilla4.letra == self.posicion4[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla4.letra = self.posicion4[i4+1]
                 i4+=1
         if columna == 5: 
-            if self.casilla5.letra == self.posicion5[-1]: 
+            if self.casilla5.letra == self.posicion5[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla5.letra = self.posicion5[i5+1]
@@ -404,58 +405,110 @@ class ModuloCodigo(Modulo):
     
     def anterior_posicion(self, columna:int, i1, i2, i3, i4, i5):
         if columna == 1: 
-            if self.casilla1.letra == self.posicion1[0].letra: #!Mismo error
+            if self.casilla1.letra == self.posicion1[0].letra: 
                 return "Primera letra alcanzada"
             else: 
                 self.casilla1.letra = self.posicion1[i1-1]
                 i1-=1
         if columna == 2: 
-            if self.casilla2.letra == self.posicion2[0]: 
+            if self.casilla2.letra == self.posicion2[0].letra: 
                 return "Primera letra alcanzada"
             else: 
                 self.casilla2.letra = self.posicion2[i2-1]
                 i2-=1
         if columna == 3: 
-            if self.casilla3.letra == self.posicion3[0]: 
+            if self.casilla3.letra == self.posicion3[0].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla3.letra = self.posicion3[i3-1]
                 i3-=1
         if columna == 4: 
-            if self.casilla4.letra == self.posicion4[0]: 
+            if self.casilla4.letra == self.posicion4[0].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla4.letra = self.posicion4[i4-1]
                 i4-=1
         if columna == 5: 
-            if self.casilla5.letra == self.posicion5[0]: 
+            if self.casilla5.letra == self.posicion5[0].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla5.letra = self.posicion5[i5-1]
                 i5-=1
+
+    def validar(self):
+        if (self.casilla1 == self.codigo[0] and self.casilla2 == self.codigo[1] and self.casilla3 == self.codigo[2]
+            and self.casilla4 == self.codigo[3] and self.casilla5 == self.codigo[4]): 
+            print("Módulo resuelto")
+            self.estado = True 
+
+        else: 
+            print("Equivocación")
+            #! TO DO: Enviar error
+
 
 class ModuloExigente(Modulo):
     def __init__(self) -> None:
         super().__init__()
         self.estado=False
         self.enunciados = ["", "", "", "", ""]
+        self.enunciado = None
         self.opciones = ["S", "N"]
-        self.timer = "Aquí va el tiempo"
+        self.tiempo_restante = 20
+        self.tiempo_intermedio = 45
+        self.hilo_temporizador = None
+        self.hilo_reposo = None
+    
+
 
     def activar(self):
-        self.estado=True    
+        self.estado=True
+        self.hilo_temporizador = threading.Thread(target=self._temporizador)
+        self.hilo_temporizador.start
+    
+    def activar_intermedio(self): 
+        self.hilo_reposo = threading.Thread(target=self._temporizador)
+        self.hilo_reposo.start
+
+    def seleccionar_enunciado(self):
+        indice_elegido = randint(0, len(self.enunciados)-1)
+        self.enunciado = self.enunciados[indice_elegido]
+        print(self.enunciado)
 
     def desactivar(self):
         self.estado=False
+        if self.hilo_temporizador:
+            self.hilo_temporizador.join()
+            self.tiempo_restante = 20
 
-    def preguntar(self):
-        indice_elegido = randint(0,10)
-        print(self.enunciados[indice_elegido])
-        self.validar()
-        self.desactivar()
+    def _iniciar_tiempo(self):
+        while self.tiempo_restante > 0:
+            print("Tiempo restante:", self.tiempo_restante, "segundos")
+            time.sleep(1)
+            self.tiempo_restante -= 1
+        print("Tiempo finalizado")
+        return "La bomba ha explotado"
+    
+    def _iniciar_intermedio(self):
+        self.activar_intermedio()
+        while self.tiempo_intermedio > 0:
+            time.sleep(1)
+            self.tiempo_restante -= 1
+        if self.hilo_reposo:
+            self.hilo_reposo.join()
+            self.tiempo_intermedio = 40
+        self.activar()
 
-    def validar(self):
-        pass
+
+    def validar(self, respuesta):
+        if self.estado == False: 
+            ## Ejemplo
+            if respuesta == "S": 
+                print("Correcto")
+                self.desactivar()
+            else: 
+                return "La bomba ha explotado"
+
+        
 
 class Cable(ABC):
     def __init__(self) -> None:
