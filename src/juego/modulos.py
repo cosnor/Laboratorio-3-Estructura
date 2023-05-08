@@ -5,9 +5,22 @@ from random import *
 import time
 import threading
 
-class Modulo(ABC):
+class Observador: 
+    def enviar_error(self, mensaje):
+        pass
+
+class Modulo:
     def __init__(self) -> None:
         self.estado= False #False indica que no ha sido resuelto
+        self.observadores = []
+    
+    def agregar_observador(self,observador): 
+        self.observadores.append(observador)
+    
+    def equivocacion(self):
+        mensaje = "Se ha equivocado"
+        for observador in self.observadores:
+            observador.enviar_error(mensaje)
 
 class ModuloCablesBasicos(Modulo):
     def __init__(self, franja: str) -> None:
@@ -44,7 +57,7 @@ class ModuloCablesBasicos(Modulo):
                 print("Modulo desactivado")
             else:             
                 print("Equivocación")
-                #! TO DO: Enviar equivocación                
+                self.equivocacion()                
 
         if self.franja == "Rosado":
             if self.cables[3].color == "Blanco" and CableBasico.color == "Blanco":
@@ -58,7 +71,7 @@ class ModuloCablesBasicos(Modulo):
                 print("Modulo desactivado")
             else: 
                 print("Equivocación")
-                #! TO DO: Enviar equivocación 
+                self.equivocacion() 
 
         if self.franja == "Verde":
             if self.cables[1].color == "Negro" and CableBasico.color == "Negro":
@@ -72,7 +85,7 @@ class ModuloCablesBasicos(Modulo):
                 print("Modulo desactivado")
             else: 
                 print("Equivocación")
-                #! TO DO: Enviar equivocación 
+                self.equivocacion() 
 
         if self.franja == "Blanco": 
             #!TO DO: Cambiar a cables normales
@@ -81,7 +94,7 @@ class ModuloCablesBasicos(Modulo):
                 print("Modulo desactivado")
             else: 
                 print("Equivocación")
-                #! TO DO: Enviar equivocación 
+                self.equivocacion() 
 
 class ModuloCablesComplejos(Modulo):
     def __init__(self) -> None:
@@ -127,7 +140,7 @@ class ModuloCablesComplejos(Modulo):
                 print("Cable cortado con éxito")
             else: 
                 print("Equivocación")
-                #!TO DO: Enviar equivocación
+                self.equivocacion()
 
         elif CableComplejo.conectado_a == "B":
             if CableComplejo.color== "Naranja y Morado" and CableComplejo.LED == False:
@@ -138,7 +151,7 @@ class ModuloCablesComplejos(Modulo):
                 print("Cable cortado con éxito")
             else: 
                 print("Equivocación")
-                #!TO DO: Enviar equivocación
+                self.equivocacion()
 
         else: print("Error en la asignación de cables")
     
@@ -149,25 +162,25 @@ class ModuloCablesComplejos(Modulo):
                 if cable.conectado_a == "A":
                     if cable.color== "Naranja y Morado" and cable.LED == False:
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                     elif cable.LED and cable.color== "Blanco":
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                     elif cable.color == "Naranja" and cable.LED == False: 
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                     else: 
                        print("Cable no cortado correcto")
                 elif cable.conectado_a == "B":
                     if cable.color== "Naranja y Morado" and cable.LED == False:
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                     elif cable.LED and cable.color== "Blanco":
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                     elif cable.color == "Naranja" and cable.LED == False: 
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                 
                     else: 
                         print("Cable no cortado correcto")
@@ -217,7 +230,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    #! Enviar equivocación
+                    self.equivocacion()
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
             elif self.numero_monitor == 2:
@@ -227,8 +240,8 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.pasar_etapa()
                     self.seleccionar(int, int)
                 else: 
-                     print("Equivocación")
-                    #! Enviar equivocación
+                    print("Equivocación")
+                    self.equivocacion()
                 pass
             else: 
                 print("Error en el número del monitor")
@@ -242,7 +255,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    #! Enviar equivocación
+                    self.equivocacion()
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
             elif self.numero_monitor == 2:
@@ -252,8 +265,8 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.pasar_etapa()
                     self.seleccionar(int, int)
                 else: 
-                     print("Equivocación")
-                    #! Enviar equivocación
+                    print("Equivocación")
+                    self.equivocacion()
                 
             else: 
                 print("Error en el número del monitor")
@@ -267,7 +280,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    #! Enviar equivocación
+                    self.equivocacion()
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
             elif self.numero_monitor == 2:
@@ -277,8 +290,8 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.pasar_etapa()
                     self.seleccionar(int, int)
                 else: 
-                     print("Equivocación")
-                    #! Enviar equivocación
+                    print("Equivocación")
+                    self.equivocacion()
                 pass
             else: 
                 print("Error en el número del monitor")
@@ -292,7 +305,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     
                 else: 
                     print("Equivocación")
-                    #! Enviar equivocación
+                    self.equivocacion()
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
             elif self.numero_monitor == 2:
@@ -302,8 +315,8 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.pasar_etapa()
                     
                 else: 
-                     print("Equivocación")
-                    #! Enviar equivocación
+                    print("Equivocación")
+                    self.equivocacion()
                 
         else: 
             print("Error en la asignación de etapas")
@@ -443,7 +456,7 @@ class ModuloCodigo(Modulo):
 
         else: 
             print("Equivocación")
-            #! TO DO: Enviar error
+            self.equivocacion()
 
 
 class ModuloExigente(Modulo):

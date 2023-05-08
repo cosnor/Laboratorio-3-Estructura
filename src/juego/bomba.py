@@ -3,21 +3,24 @@ from random import randint
 from modulos import *
 
 
-class Bomba: 
+class Bomba(Observador): 
     def __init__(self, tiempo, errores: int, modulos: int, id: int) -> None:
         self.id = id 
         self.tiempo = tiempo
         self.estado = "Activa"
-        self.errores_restantes= errores 
+        self.errores = errores
+        self.equivocaciones= 0 
         self.numero_modulos= modulos
         self.modulos_restantes= modulos
         self.modulos = None
         self.linea_tiempo= None
+        self.registro = None
 
-    def equivocacion(self):
+    def notificar_equivocacion(self):
         if self.estado: 
-            self.errores_restantes = self.errores_restantes -1
-        if self.errores_restantes <= 0:
+            self.equivocaciones = self.equivocaciones + 1
+            print("equivocacion")
+        if self.equivocaciones <= self.errores:
             self.estado = "Detonada"
     
     def tiempo_agotado(self): 
