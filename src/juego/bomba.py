@@ -1,6 +1,6 @@
 import time
 from random import randint
-from modulos import *
+from juego.modulos import *
 
 
 class Bomba(Observador): 
