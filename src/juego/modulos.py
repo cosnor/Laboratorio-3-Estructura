@@ -2,8 +2,11 @@ from __future__ import annotations
 from abc import ABC
 from typing import List
 from random import * 
+from random import shuffle
 import time
 import threading
+import pygame
+from bomba import *
 
 class Observador: 
     def enviar_error(self, mensaje):
@@ -13,6 +16,7 @@ class Modulo:
     def __init__(self) -> None:
         self.estado= False #False indica que no ha sido resuelto
         self.observadores = []
+        self.pos = pos
     
     def agregar_observador(self,observador): 
         self.observadores.append(observador)
@@ -23,15 +27,19 @@ class Modulo:
             observador.enviar_error(mensaje)
 
 class ModuloCablesBasicos(Modulo):
-    def __init__(self, franja: str) -> None:
-        super().__init__()
+    def __init__(self, franja: str, pos:int) -> None:
+        super().__init__(pos)
         self.cables: List["Cable"]=[]
         self.franja = franja
+    
+    def dibujarFondo(self, pantalla):
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_cables_simples.png")
+        pantalla.blit(fondo, (0, 0))
 
     def agregar_cables(self):
         #Asignación aleatoria del orden de los cables
         LISTA_COLORES = ["Rojo", "Azul", "Negro", "Blanco"]
-        random.shuffle(LISTA_COLORES)
+        shuffle(LISTA_COLORES)
         for i in range(0,3):
             self.cables.append(CableBasico(color=LISTA_COLORES[i]))
         
@@ -97,9 +105,13 @@ class ModuloCablesBasicos(Modulo):
                 self.equivocacion() 
 
 class ModuloCablesComplejos(Modulo):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, pos:int) -> None:
+        super().__init__(pos)
         self.cables: List["Cable"]=[]
+    
+    def dibujarFondo(self, pantalla):
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_cables_complejos.png")
+        pantalla.blit(fondo, (0, 0))
 
     #Asignación de cables
     def agregar_cables(self):
@@ -191,8 +203,8 @@ class ModuloCablesComplejos(Modulo):
 
 class ModuloPalabras(Modulo):  #Caso memoria
     #Solo una lista. Hacer lista aleatoria que se agrega con nodos
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, pos: int) -> None:
+        super().__init__(pos)
         self.numero_monitor:int = 0
         self.lista= None
         self.etapa= 0
@@ -202,6 +214,10 @@ class ModuloPalabras(Modulo):  #Caso memoria
         self.seleccion2 = None
         self.seleccion3 = None
         self.seleccion4 = None
+
+    def dibujarFondo(self, pantalla):
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_memoria.png")
+        pantalla.blit(fondo, (0, 0))
 
     def agregar_lista(self): 
         random.shuffle(self.opciones)
@@ -213,7 +229,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
         indice_elegido = randint(0,1)
         self.numero_monitor = LISTA_MONITOR[indice_elegido]
         self.etapa = self.etapa +1
-        random.shuffle(self.opciones)
+        shuffle(self.opciones)
 
     def seleccionar(self, posicion: int, opcion: int):
         self.seleccion = Nodo(posicion, opcion)
@@ -325,8 +341,8 @@ class ModuloPalabras(Modulo):  #Caso memoria
     
 class ModuloCodigo(Modulo):
     i1 = 0; i2 = 0;  i3 = 0;  i4 = 0; i5 = 0 
-    def __init__(self, codigo:str) -> None:
-        super().__init__()
+    def __init__(self, codigo:str, pos:int) -> None:
+        super().__init__(pos)
         self.codigo = codigo
         self.casilla1 = None
         self.casilla2 = None 
@@ -339,7 +355,10 @@ class ModuloCodigo(Modulo):
         self.posicion4 = []
         self.posicion5 = []
 
-    
+    def dibujarFondo(self, pantalla):
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_codigo.png")
+        pantalla.blit(fondo, (0, 0))
+
     def set_casillas_inicial(self):
         LISTA_LETRAS= ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L","M", "N", "O", "P","Q",
                        "R", "S", "T", "U", "V", "X", "Y","Z"]
@@ -372,11 +391,11 @@ class ModuloCodigo(Modulo):
                 letra = LISTA_LETRAS[randint(0, 24)]
             self.posicion5.append(Casilla(letra))
         
-        random.shuffle(self.posicion1)
-        random.shuffle(self.posicion2)
-        random.shuffle(self.posicion3)
-        random.shuffle(self.posicion4)
-        random.shuffle(self.posicion5)
+        shuffle(self.posicion1)
+        shuffle(self.posicion2)
+        shuffle(self.posicion3)
+        shuffle(self.posicion4)
+        shuffle(self.posicion5)
 
         self.casilla1 = self.posicion1[0]
         self.casilla2 = self.posicion2[0] 
@@ -460,8 +479,8 @@ class ModuloCodigo(Modulo):
 
 
 class ModuloExigente(Modulo):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, pos:int) -> None:
+        super().__init__(pos)
         self.estado=False
         self.enunciados = ["", "", "", "", ""]
         self.enunciado = None
@@ -471,8 +490,10 @@ class ModuloExigente(Modulo):
         self.hilo_temporizador = None
         self.hilo_reposo = None
     
-
-
+    def dibujarFondo(self, pantalla):
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_exigente.png")
+        pantalla.blit(fondo, (0, 0))
+        
     def activar(self):
         self.estado=True
         self.hilo_temporizador = threading.Thread(target=self._temporizador)
