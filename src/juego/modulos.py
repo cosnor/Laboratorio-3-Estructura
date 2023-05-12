@@ -2,24 +2,47 @@ from __future__ import annotations
 from abc import ABC
 from typing import List
 from random import * 
+from random import shuffle
+import time
+import threading
+import pygame
+from bomba import *
 
-class Modulo(ABC):
+class Observador: 
+    def enviar_error(self, mensaje):
+        pass
+
+class Modulo:
     def __init__(self) -> None:
         self.estado= False #False indica que no ha sido resuelto
+        self.observadores = []
+        self.pos = pos
+    
+    def agregar_observador(self,observador): 
+        self.observadores.append(observador)
+    
+    def equivocacion(self):
+        mensaje = "Se ha equivocado"
+        for observador in self.observadores:
+            observador.enviar_error(mensaje)
 
 class ModuloCablesBasicos(Modulo):
-    def __init__(self, franja: str) -> None:
-        super().__init__()
+    def __init__(self, franja: str, pos:int) -> None:
+        super().__init__(pos)
         self.cables: List["Cable"]=[]
         self.franja = franja
+    
+    def dibujarFondo(self, pantalla):
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_cables_simples.png")
+        pantalla.blit(fondo, (0, 0))
 
     def agregar_cables(self):
         #Asignación aleatoria del orden de los cables
         LISTA_COLORES = ["Rojo", "Azul", "Negro", "Blanco"]
-        random.shuffle(LISTA_COLORES)
+        shuffle(LISTA_COLORES)
         for i in range(0,3):
             self.cables.append(CableBasico(color=LISTA_COLORES[i]))
-
+        
     def cortar_cable(self, CableBasico: object): 
         #Validación que modulo esté sin desactivar
         if self.estado == False: 
@@ -42,7 +65,7 @@ class ModuloCablesBasicos(Modulo):
                 print("Modulo desactivado")
             else:             
                 print("Equivocación")
-                #! TO DO: Enviar equivocación                
+                self.equivocacion()                
 
         if self.franja == "Rosado":
             if self.cables[3].color == "Blanco" and CableBasico.color == "Blanco":
@@ -56,7 +79,7 @@ class ModuloCablesBasicos(Modulo):
                 print("Modulo desactivado")
             else: 
                 print("Equivocación")
-                #! TO DO: Enviar equivocación 
+                self.equivocacion() 
 
         if self.franja == "Verde":
             if self.cables[1].color == "Negro" and CableBasico.color == "Negro":
@@ -70,7 +93,7 @@ class ModuloCablesBasicos(Modulo):
                 print("Modulo desactivado")
             else: 
                 print("Equivocación")
-                #! TO DO: Enviar equivocación 
+                self.equivocacion() 
 
         if self.franja == "Blanco": 
             #!TO DO: Cambiar a cables normales
@@ -79,12 +102,16 @@ class ModuloCablesBasicos(Modulo):
                 print("Modulo desactivado")
             else: 
                 print("Equivocación")
-                #! TO DO: Enviar equivocación 
+                self.equivocacion() 
 
 class ModuloCablesComplejos(Modulo):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, pos:int) -> None:
+        super().__init__(pos)
         self.cables: List["Cable"]=[]
+    
+    def dibujarFondo(self, pantalla):
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_cables_complejos.png")
+        pantalla.blit(fondo, (0, 0))
 
     #Asignación de cables
     def agregar_cables(self):
@@ -125,7 +152,7 @@ class ModuloCablesComplejos(Modulo):
                 print("Cable cortado con éxito")
             else: 
                 print("Equivocación")
-                #!TO DO: Enviar equivocación
+                self.equivocacion()
 
         elif CableComplejo.conectado_a == "B":
             if CableComplejo.color== "Naranja y Morado" and CableComplejo.LED == False:
@@ -136,7 +163,7 @@ class ModuloCablesComplejos(Modulo):
                 print("Cable cortado con éxito")
             else: 
                 print("Equivocación")
-                #!TO DO: Enviar equivocación
+                self.equivocacion()
 
         else: print("Error en la asignación de cables")
     
@@ -147,25 +174,25 @@ class ModuloCablesComplejos(Modulo):
                 if cable.conectado_a == "A":
                     if cable.color== "Naranja y Morado" and cable.LED == False:
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                     elif cable.LED and cable.color== "Blanco":
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                     elif cable.color == "Naranja" and cable.LED == False: 
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                     else: 
                        print("Cable no cortado correcto")
                 elif cable.conectado_a == "B":
                     if cable.color== "Naranja y Morado" and cable.LED == False:
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                     elif cable.LED and cable.color== "Blanco":
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                     elif cable.color == "Naranja" and cable.LED == False: 
                         return "Equivocación"
-                        #!TO DO: Enviar equivocación
+                        self.equivocacion()
                 
                     else: 
                         print("Cable no cortado correcto")
@@ -176,8 +203,8 @@ class ModuloCablesComplejos(Modulo):
 
 class ModuloPalabras(Modulo):  #Caso memoria
     #Solo una lista. Hacer lista aleatoria que se agrega con nodos
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, pos: int) -> None:
+        super().__init__(pos)
         self.numero_monitor:int = 0
         self.lista= None
         self.etapa= 0
@@ -188,18 +215,21 @@ class ModuloPalabras(Modulo):  #Caso memoria
         self.seleccion3 = None
         self.seleccion4 = None
 
+    def dibujarFondo(self, pantalla):
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_memoria.png")
+        pantalla.blit(fondo, (0, 0))
+
+    def agregar_lista(self): 
+        random.shuffle(self.opciones)
+        self.lista = self.opciones
+
     #Se ejecuta una vez al principio y luego por validar()
     def pasar_etapa(self): 
         LISTA_MONITOR = [1, 2]
         indice_elegido = randint(0,1)
         self.numero_monitor = LISTA_MONITOR[indice_elegido]
         self.etapa = self.etapa +1
-        self.agregar_lista() #!Revisar
-
-    
-    def agregar_lista(self): 
-        random.shuffle(self.opciones)
-        self.lista = self.opciones # Esto no debe pasar 
+        shuffle(self.opciones)
 
     def seleccionar(self, posicion: int, opcion: int):
         self.seleccion = Nodo(posicion, opcion)
@@ -216,7 +246,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    #! Enviar equivocación
+                    self.equivocacion()
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
             elif self.numero_monitor == 2:
@@ -226,8 +256,8 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.pasar_etapa()
                     self.seleccionar(int, int)
                 else: 
-                     print("Equivocación")
-                    #! Enviar equivocación
+                    print("Equivocación")
+                    self.equivocacion()
                 pass
             else: 
                 print("Error en el número del monitor")
@@ -241,7 +271,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    #! Enviar equivocación
+                    self.equivocacion()
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
             elif self.numero_monitor == 2:
@@ -251,8 +281,8 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.pasar_etapa()
                     self.seleccionar(int, int)
                 else: 
-                     print("Equivocación")
-                    #! Enviar equivocación
+                    print("Equivocación")
+                    self.equivocacion()
                 
             else: 
                 print("Error en el número del monitor")
@@ -266,7 +296,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    #! Enviar equivocación
+                    self.equivocacion()
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
             elif self.numero_monitor == 2:
@@ -276,8 +306,8 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.pasar_etapa()
                     self.seleccionar(int, int)
                 else: 
-                     print("Equivocación")
-                    #! Enviar equivocación
+                    print("Equivocación")
+                    self.equivocacion()
                 pass
             else: 
                 print("Error en el número del monitor")
@@ -291,7 +321,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     
                 else: 
                     print("Equivocación")
-                    #! Enviar equivocación
+                    self.equivocacion()
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
             elif self.numero_monitor == 2:
@@ -301,8 +331,8 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.pasar_etapa()
                     
                 else: 
-                     print("Equivocación")
-                    #! Enviar equivocación
+                    print("Equivocación")
+                    self.equivocacion()
                 
         else: 
             print("Error en la asignación de etapas")
@@ -311,8 +341,8 @@ class ModuloPalabras(Modulo):  #Caso memoria
     
 class ModuloCodigo(Modulo):
     i1 = 0; i2 = 0;  i3 = 0;  i4 = 0; i5 = 0 
-    def __init__(self, codigo:str) -> None:
-        super().__init__()
+    def __init__(self, codigo:str, pos:int) -> None:
+        super().__init__(pos)
         self.codigo = codigo
         self.casilla1 = None
         self.casilla2 = None 
@@ -325,7 +355,10 @@ class ModuloCodigo(Modulo):
         self.posicion4 = []
         self.posicion5 = []
 
-    
+    def dibujarFondo(self, pantalla):
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_codigo.png")
+        pantalla.blit(fondo, (0, 0))
+
     def set_casillas_inicial(self):
         LISTA_LETRAS= ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L","M", "N", "O", "P","Q",
                        "R", "S", "T", "U", "V", "X", "Y","Z"]
@@ -336,7 +369,7 @@ class ModuloCodigo(Modulo):
         self.posicion4.append(Casilla(self.codigo[3]))
         self.posicion5.append(Casilla(self.codigo[4]))
 
-        for i in range(1,4):
+        for i in range(1,6):
             letra = LISTA_LETRAS[randint(0, 24)]
             while(letra == self.codigo[0]):
                 letra = LISTA_LETRAS[randint(0, 24)]
@@ -358,11 +391,11 @@ class ModuloCodigo(Modulo):
                 letra = LISTA_LETRAS[randint(0, 24)]
             self.posicion5.append(Casilla(letra))
         
-        random.shuffle(self.posicion1)
-        random.shuffle(self.posicion2)
-        random.shuffle(self.posicion3)
-        random.shuffle(self.posicion4)
-        random.shuffle(self.posicion5)
+        shuffle(self.posicion1)
+        shuffle(self.posicion2)
+        shuffle(self.posicion3)
+        shuffle(self.posicion4)
+        shuffle(self.posicion5)
 
         self.casilla1 = self.posicion1[0]
         self.casilla2 = self.posicion2[0] 
@@ -375,28 +408,28 @@ class ModuloCodigo(Modulo):
             if self.casilla1.letra == self.posicion1[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
-                self.casilla1.letra = self.posicion1[i1+1] #! Poner.letra
+                self.casilla1.letra = self.posicion1[i1+1]
                 i1+=1
         if columna == 2: 
-            if self.casilla2.letra == self.posicion2[-1]: 
+            if self.casilla2.letra == self.posicion2[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla2.letra = self.posicion2[i2+1]
                 i2+=1
         if columna == 3: 
-            if self.casilla3.letra == self.posicion3[-1]: 
+            if self.casilla3.letra == self.posicion3[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla3.letra = self.posicion3[i3+1]
                 i3+=1
         if columna == 4: 
-            if self.casilla4.letra == self.posicion4[-1]: 
+            if self.casilla4.letra == self.posicion4[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla4.letra = self.posicion4[i4+1]
                 i4+=1
         if columna == 5: 
-            if self.casilla5.letra == self.posicion5[-1]: 
+            if self.casilla5.letra == self.posicion5[-1].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla5.letra = self.posicion5[i5+1]
@@ -404,58 +437,113 @@ class ModuloCodigo(Modulo):
     
     def anterior_posicion(self, columna:int, i1, i2, i3, i4, i5):
         if columna == 1: 
-            if self.casilla1.letra == self.posicion1[0].letra: #!Mismo error
+            if self.casilla1.letra == self.posicion1[0].letra: 
                 return "Primera letra alcanzada"
             else: 
                 self.casilla1.letra = self.posicion1[i1-1]
                 i1-=1
         if columna == 2: 
-            if self.casilla2.letra == self.posicion2[0]: 
+            if self.casilla2.letra == self.posicion2[0].letra: 
                 return "Primera letra alcanzada"
             else: 
                 self.casilla2.letra = self.posicion2[i2-1]
                 i2-=1
         if columna == 3: 
-            if self.casilla3.letra == self.posicion3[0]: 
+            if self.casilla3.letra == self.posicion3[0].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla3.letra = self.posicion3[i3-1]
                 i3-=1
         if columna == 4: 
-            if self.casilla4.letra == self.posicion4[0]: 
+            if self.casilla4.letra == self.posicion4[0].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla4.letra = self.posicion4[i4-1]
                 i4-=1
         if columna == 5: 
-            if self.casilla5.letra == self.posicion5[0]: 
+            if self.casilla5.letra == self.posicion5[0].letra: 
                 return "Ultima letra alcanzada"
             else: 
                 self.casilla5.letra = self.posicion5[i5-1]
                 i5-=1
 
+    def validar(self):
+        if (self.casilla1 == self.codigo[0] and self.casilla2 == self.codigo[1] and self.casilla3 == self.codigo[2]
+            and self.casilla4 == self.codigo[3] and self.casilla5 == self.codigo[4]): 
+            print("Módulo resuelto")
+            self.estado = True 
+
+        else: 
+            print("Equivocación")
+            self.equivocacion()
+
+
 class ModuloExigente(Modulo):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, pos:int) -> None:
+        super().__init__(pos)
         self.estado=False
         self.enunciados = ["", "", "", "", ""]
+        self.enunciado = None
         self.opciones = ["S", "N"]
-        self.timer = "Aquí va el tiempo"
-
+        self.tiempo_restante = 20
+        self.tiempo_intermedio = 45
+        self.hilo_temporizador = None
+        self.hilo_reposo = None
+    
+    def dibujarFondo(self, pantalla):
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_exigente.png")
+        pantalla.blit(fondo, (0, 0))
+        
     def activar(self):
-        self.estado=True    
+        self.estado=True
+        self.hilo_temporizador = threading.Thread(target=self._temporizador)
+        self.hilo_temporizador.start
+    
+    def activar_intermedio(self): 
+        self.hilo_reposo = threading.Thread(target=self._temporizador)
+        self.hilo_reposo.start
 
+    def seleccionar_enunciado(self):
+        indice_elegido = randint(0, len(self.enunciados)-1)
+        self.enunciado = self.enunciados[indice_elegido]
+        print(self.enunciado)
+
+    #!Revisar la desactivación
     def desactivar(self):
         self.estado=False
+        if self.hilo_temporizador:
+            self.hilo_temporizador.join()
+            self.tiempo_restante = 20
 
-    def preguntar(self):
-        indice_elegido = randint(0,10)
-        print(self.enunciados[indice_elegido])
-        self.validar()
-        self.desactivar()
+    def _iniciar_tiempo(self):
+        while self.tiempo_restante > 0:
+            print("Tiempo restante:", self.tiempo_restante, "segundos")
+            time.sleep(1)
+            self.tiempo_restante -= 1
+        print("Tiempo finalizado")
+        return "La bomba ha explotado"
+    
+    def _iniciar_intermedio(self):
+        self.activar_intermedio()
+        while self.tiempo_intermedio > 0:
+            time.sleep(1)
+            self.tiempo_restante -= 1
+        if self.hilo_reposo:
+            self.hilo_reposo.join()
+            self.tiempo_intermedio = 40
+        self.activar()
 
-    def validar(self):
-        pass
+
+    def validar(self, respuesta):
+        if self.estado == False: 
+            ## Ejemplo
+            if respuesta == "S": 
+                print("Correcto")
+                self.desactivar()
+            else: 
+                return "La bomba ha explotado"
+
+        
 
 class Cable(ABC):
     def __init__(self) -> None:
