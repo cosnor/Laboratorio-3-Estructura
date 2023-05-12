@@ -5,7 +5,7 @@ class Button:
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
         self.color = color
-        self.font = pygame.font.Font("graphics/Pixeled.ttf", 20)
+        self.font = pygame.font.Font("src/font/Pixeled.ttf", 20)
 
     def draw(self):
         pygame.draw.rect(self.screen, self.color, self.rect)

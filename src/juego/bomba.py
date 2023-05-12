@@ -1,6 +1,6 @@
 import time
 from random import randint
-from modulos import *
+from juego.modulos import *
 
 
 class Bomba(Observador): 
@@ -39,11 +39,11 @@ class Bomba(Observador):
         POSICIONESSELEC = []
         if self.modulos == []: 
             for i in range(0, self.numero_modulos):
-                indice_elegido = randint(0, self.numero_modulos - i)
+                indice_elegido = randint(0, self.numero_modulos - i - 1)
                 LISTA_MODULOS_SELECCIONADOS.append(LISTA_MODULOS.pop(indice_elegido))
                 
             for i in range(0, self.numero_modulos):
-                indice_elegido = randint(0, self.numero_modulos - i)
+                indice_elegido = randint(0, self.numero_modulos - i - 1)
                 POSICIONESSELEC.append(POSICIONES.pop(indice_elegido))
             print(LISTA_MODULOS_SELECCIONADOS)
 
