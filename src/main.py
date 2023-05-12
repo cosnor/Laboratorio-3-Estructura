@@ -331,7 +331,7 @@ def game():
     escribir.limpiarArchivo()
     escribir.escribirConfiguracion(str(a1.data))
     escribir.escribirConfiguracion(str(a2.data))
-    image1 = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Bynary Bomb logo nobg.png")
+    image1 = pygame.image.load("src/graphics/Bynary Bomb logo nobg.png")
     bombita = Bomba(duration, int(a1.data), int(a2.data), 10)
     bombita.asignar_modulos()
     pos = [module1, module2, module3, module4, module5]
