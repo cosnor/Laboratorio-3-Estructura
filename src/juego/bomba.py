@@ -15,6 +15,7 @@ class Bomba(Observador):
         self.modulos = []
         self.linea_tiempo= None
         self.registro = None
+        self.franja = None
 
     def notificar_equivocacion(self):
         if self.estado: 
@@ -31,7 +32,12 @@ class Bomba(Observador):
         if self.estado: 
             if self.modulos_restantes == 0: 
                 self.estado = "Desactivada"
-    
+
+    def colocarFranja(self, timer):
+        franhint = f"Laboratorio-3-Estructura/src/graphics/Modulo Timer/franja_{self.franja}.png"
+        fran = pygame.image.load(franhint)
+        timer.blit(fran, (0,0))
+
     def asignar_modulos(self): 
         LISTA_MODULOS = ["Cables simples", "Cables complejos", "Memoria", "Código", "Exigente"]
         LISTA_MODULOS_SELECCIONADOS = []
@@ -48,15 +54,16 @@ class Bomba(Observador):
             print(LISTA_MODULOS_SELECCIONADOS)
 
             for modulo in LISTA_MODULOS_SELECCIONADOS: 
-                print(modulo)
                 if modulo == "Cables simples": 
-                    FRANJAS = ["Amarillo", "Rosado", "Verde", "Blanco"]
+                    FRANJAS = ["amarilla", "rosada", "verde", "blanca"]
                     indice_elegido = randint(0, 3)
                     posicion = i
                     nuevo_modulo = ModuloCablesBasicos(FRANJAS[indice_elegido], 1)
                     nuevo_modulo.agregar_cables()
+                    self.franja = nuevo_modulo.franja
+                    print(nuevo_modulo.franja)
                     self.modulos.append(nuevo_modulo)
-
+                    
 
                 elif modulo == "Cables complejos":
                         nuevo_modulo = ModuloCablesComplejos(4)

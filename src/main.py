@@ -249,10 +249,26 @@ def game():
     bombita.asignar_modulos()
     pos = [module1, module2, module3, module4, module5]
     x = 0
-    print(bombita.modulos)
-    bombita.asignar_modulos() 
+    for modulo in bombita.modulos:
+            modulo.dibujarFondo(pos[x])
+            if x < a2.data -1:
+                x= x+1
+    
     while running:
+        bombita.colocarFranja(timer)
+        x = 0
         screen.fill(BLACK)
+        for modulo in bombita.modulos:
+            if modulo.nombre == "Cables Básicos":
+                modulo.dibujarElementos(pos[x])
+            elif modulo.nombre == "Cables Complejos": 
+                modulo.dibujarElementos(pos[x])
+            elif modulo.nombre == "Código": 
+                modulo.dibujarElementos(pos[x])
+                
+            if x < a2.data -1:
+                x= x+1
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -273,10 +289,8 @@ def game():
         screen.blit(module5, (402,293))
         screen.blit(timer, (625,293))
         
-        for modulo in bombita.modulos:
-            modulo.dibujarFondo(pos[x])
-            if x < a2.data -1:
-                x= x+1
+
+        
             
          # Calcular el tiempo restante
         current_time = time.time()

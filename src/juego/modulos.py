@@ -29,19 +29,61 @@ class Modulo:
 class ModuloCablesBasicos(Modulo):
     def __init__(self, franja: str, pos:int) -> None:
         super().__init__(pos)
+        self.nombre = "Cables Básicos"
         self.cables: List["Cable"]=[]
         self.franja = franja
     
     def dibujarFondo(self, pantalla):
+        #self.agregar_cables()
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_cables_simples.png")
         pantalla.blit(fondo, (0, 0))
-
+    
+    def dibujarElementos(self, pantalla): 
+        for cable in self.cables: 
+            pantalla.blit(cable.icono_cable, (cable.posx, cable.posy))
+           # if cable.icono_cable.collidepoint(cable.posx, cable.posy):
+            #    print("xd")
     def agregar_cables(self):
         #Asignación aleatoria del orden de los cables
         LISTA_COLORES = ["Rojo", "Azul", "Negro", "Blanco"]
         shuffle(LISTA_COLORES)
-        for i in range(0,3):
-            self.cables.append(CableBasico(color=LISTA_COLORES[i]))
+        for i in range(0,4):
+            if i == 0: 
+                if LISTA_COLORES[i] == "Rojo": 
+                    self.cables.append(CableRojo(color=LISTA_COLORES[i], posx= 0, posy = 1))
+                elif LISTA_COLORES[i] == "Azul":
+                    self.cables.append(CableAzul(color=LISTA_COLORES[i], posx= 0, posy = 1))
+                elif LISTA_COLORES[i] == "Negro":
+                    self.cables.append(CableNegro(color=LISTA_COLORES[i], posx= 0, posy = 1))
+                elif LISTA_COLORES[i] == "Blanco":
+                    self.cables.append(CableBlanco(color=LISTA_COLORES[i], posx= 0, posy = 1))
+            elif i == 1: 
+                if LISTA_COLORES[i] == "Rojo": 
+                    self.cables.append(CableRojo(color=LISTA_COLORES[i], posx= 0, posy = 30))
+                elif LISTA_COLORES[i] == "Azul":
+                    self.cables.append(CableAzul(color=LISTA_COLORES[i], posx= 0, posy = 30))
+                elif LISTA_COLORES[i] == "Negro":
+                    self.cables.append(CableNegro(color=LISTA_COLORES[i], posx= 0, posy = 30))
+                elif LISTA_COLORES[i] == "Blanco":
+                    self.cables.append(CableBlanco(color=LISTA_COLORES[i], posx= 0, posy = 30))
+            elif i == 2: 
+                if LISTA_COLORES[i] == "Rojo": 
+                    self.cables.append(CableRojo(color=LISTA_COLORES[i], posx= 0, posy = 60))
+                elif LISTA_COLORES[i] == "Azul":
+                    self.cables.append(CableAzul(color=LISTA_COLORES[i], posx= 0, posy = 60))
+                elif LISTA_COLORES[i] == "Negro":
+                    self.cables.append(CableNegro(color=LISTA_COLORES[i], posx= 0, posy = 60))
+                elif LISTA_COLORES[i] == "Blanco":
+                    self.cables.append(CableBlanco(color=LISTA_COLORES[i], posx= 0, posy = 60))
+            elif i == 3: 
+                if LISTA_COLORES[i] == "Rojo": 
+                    self.cables.append(CableRojo(color=LISTA_COLORES[i], posx= 0, posy = 90))
+                elif LISTA_COLORES[i] == "Azul":
+                    self.cables.append(CableAzul(color=LISTA_COLORES[i], posx= 0, posy = 90))
+                elif LISTA_COLORES[i] == "Negro":
+                    self.cables.append(CableNegro(color=LISTA_COLORES[i], posx= 0, posy = 90))
+                elif LISTA_COLORES[i] == "Blanco":
+                    self.cables.append(CableBlanco(color=LISTA_COLORES[i], posx= 0, posy = 90))
         
     def cortar_cable(self, CableBasico: object): 
         #Validación que modulo esté sin desactivar
@@ -53,7 +95,7 @@ class ModuloCablesBasicos(Modulo):
 
     def validacion(self, CableBasico):
         #Comprobación de que el cable cortado sea el correcto luego de  presionar enviar o cortar un cable
-        if self.franja == "Amarillo": 
+        if self.franja == "amarilla": 
             if self.cables[0].color =="Rojo" and CableBasico.color == "Rojo":  
                 self.estado = True
                 print("Modulo desactivado")
@@ -67,7 +109,7 @@ class ModuloCablesBasicos(Modulo):
                 print("Equivocación")
                 self.equivocacion()                
 
-        if self.franja == "Rosado":
+        if self.franja == "rosada":
             if self.cables[3].color == "Blanco" and CableBasico.color == "Blanco":
                 self.estado = True
                 print("Modulo desactivado")
@@ -81,7 +123,7 @@ class ModuloCablesBasicos(Modulo):
                 print("Equivocación")
                 self.equivocacion() 
 
-        if self.franja == "Verde":
+        if self.franja == "verde":
             if self.cables[1].color == "Negro" and CableBasico.color == "Negro":
                 self.estado = True
                 print("Modulo desactivado")
@@ -95,7 +137,7 @@ class ModuloCablesBasicos(Modulo):
                 print("Equivocación")
                 self.equivocacion() 
 
-        if self.franja == "Blanco": 
+        if self.franja == "blanca": 
             #!TO DO: Cambiar a cables normales
             if CableComplejo == None: 
                 self.estado = True
@@ -107,16 +149,36 @@ class ModuloCablesBasicos(Modulo):
 class ModuloCablesComplejos(Modulo):
     def __init__(self, pos:int) -> None:
         super().__init__(pos)
+        self.nombre = "Cables Complejos"
         self.cables: List["Cable"]=[]
     
     def dibujarFondo(self, pantalla):
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_cables_complejos.png")
         pantalla.blit(fondo, (0, 0))
-
+    
+    def dibujarElementos(self, pantalla):
+        for i, cable in enumerate(self.cables): 
+            if i == 0: 
+                pantalla.blit(cable.icono, (0,0))
+                pantalla.blit(cable.icono_led, (0,0))
+                pantalla.blit(cable.icono_letra, (0,0))
+            elif i == 1: 
+                pantalla.blit(cable.icono, (22,0))
+                pantalla.blit(cable.icono_led, (22,0))
+                pantalla.blit(cable.icono_letra, (22,0))
+            elif i == 2: 
+                pantalla.blit(cable.icono, (46,0))
+                pantalla.blit(cable.icono_led, (46,0))
+                pantalla.blit(cable.icono_letra, (46,0))
+            elif i == 3: 
+                pantalla.blit(cable.icono, (70,0))
+                pantalla.blit(cable.icono_led, (70,0))
+                pantalla.blit(cable.icono_letra, (70,0))
+            
     #Asignación de cables
     def agregar_cables(self):
         LISTA_COLORES = ["Naranja", "Morado", "Naranja y Morado", "Blanco"]
-        for i in range(0,3):
+        for i in range(0,4):
             indice_elegido = randint(0,3)
             self.cables.append(CableComplejo(color=LISTA_COLORES[indice_elegido]))
 
@@ -205,6 +267,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
     #Solo una lista. Hacer lista aleatoria que se agrega con nodos
     def __init__(self, pos: int) -> None:
         super().__init__(pos)
+        self.nombre = "Memoria"
         self.numero_monitor:int = 0
         self.lista= None
         self.etapa= 0
@@ -218,6 +281,9 @@ class ModuloPalabras(Modulo):  #Caso memoria
     def dibujarFondo(self, pantalla):
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_memoria.png")
         pantalla.blit(fondo, (0, 0))
+    
+    def dibujarElementos(self, pantalla):
+        pass
 
     def agregar_lista(self): 
         shuffle(self.opciones)
@@ -343,6 +409,7 @@ class ModuloCodigo(Modulo):
     i1 = 0; i2 = 0;  i3 = 0;  i4 = 0; i5 = 0 
     def __init__(self, codigo:str, pos:int) -> None:
         super().__init__(pos)
+        self.nombre = "Código"
         self.codigo = codigo
         self.casilla1 = None
         self.casilla2 = None 
@@ -354,11 +421,23 @@ class ModuloCodigo(Modulo):
         self.posicion3 = []
         self.posicion4 = []
         self.posicion5 = []
+        self.font = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 12)
 
     def dibujarFondo(self, pantalla):
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_codigo.png")
         pantalla.blit(fondo, (0, 0))
-
+    
+    def dibujarElementos(self, pantalla): 
+        letra1 = self.font.render(self.casilla1.letra, True, (0,0,0))
+        letra2 = self.font.render(self.casilla2.letra, True, (0,0,0))
+        letra3 = self.font.render(self.casilla3.letra, True, (0,0,0))
+        letra4 = self.font.render(self.casilla4.letra, True, (0,0,0))
+        letra5 = self.font.render(self.casilla5.letra, True, (0,0,0))
+        pantalla.blit(letra1, (47,80))
+        pantalla.blit(letra2, (72,80))
+        pantalla.blit(letra3, (96,80))
+        pantalla.blit(letra4, (121,80))
+        pantalla.blit(letra5, (147,80))
     def set_casillas_inicial(self):
         LISTA_LETRAS= ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L","M", "N", "O", "P","Q",
                        "R", "S", "T", "U", "V", "X", "Y","Z"]
@@ -369,7 +448,7 @@ class ModuloCodigo(Modulo):
         self.posicion4.append(Casilla(self.codigo[3]))
         self.posicion5.append(Casilla(self.codigo[4]))
 
-        for i in range(1,6):
+        for i in range(0,6):
             letra = LISTA_LETRAS[randint(0, 24)]
             while(letra == self.codigo[0]):
                 letra = LISTA_LETRAS[randint(0, 24)]
@@ -481,6 +560,7 @@ class ModuloCodigo(Modulo):
 class ModuloExigente(Modulo):
     def __init__(self, pos:int) -> None:
         super().__init__(pos)
+        self.nombre = "Exigente"
         self.estado=False
         self.enunciados = ["", "", "", "", ""]
         self.enunciado = None
@@ -549,6 +629,7 @@ class Cable(ABC):
     def __init__(self) -> None:
         self.estado=False #False: no ha sido cortado
 
+
 class CableBasico(Cable):
     def __init__(self, color: str) -> None:
         super().__init__()
@@ -557,21 +638,81 @@ class CableBasico(Cable):
     def set_estado_cortado(self):
         self.estado=True
 
+class CableRojo(CableBasico): 
+    def __init__(self, color, posx, posy) -> None:
+        super().__init__(color)
+        self.icono_cable = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_rojo.png")
+        self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_rojo_cortado.png")
+        self.posx = posx 
+        self.posy = posy
+
+class CableBlanco(CableBasico): 
+    def __init__(self, color, posx, posy) -> None:
+        super().__init__(color)
+        self.icono_cable = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_blanco.png")
+        self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_blanco_cortado.png")
+        self.posx = posx 
+        self.posy = posy
+
+class CableNegro(CableBasico): 
+    def __init__(self, color, posx, posy) -> None:
+        super().__init__(color)
+        self.icono_cable = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_negro.png")
+        self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_negro_cortado.png")
+        self.posx = posx 
+        self.posy = posy
+
+class CableAzul(CableBasico): 
+    def __init__(self, color, posx, posy) -> None:
+        super().__init__(color)
+        self.icono_cable = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_azul.png")
+        self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_azul_cortado.png")
+        self.posx = posx 
+        self.posy = posy
+
 class CableComplejo(Cable):
     def __init__(self, color: str) -> None:
         super().__init__()
         self.color= color
         self.conectado_a= None
         self.LED=None
+        self.icono = None
+        self.icono_cortado = None
+        self.icono_led = None
+        self.icono_letra = None
 
+        if color == "Naranja":
+            self.icono = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_naranja.png")
+            self.icono_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_naranja_cortado.png")
+        elif color == "Morado": 
+            self.icono = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_morado.png")
+            self.icono_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_morado_cortado.png")
+        elif color == "Naranja y Morado": 
+            self.icono = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_naranja_morado.png")
+            self.icono_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_naranja_morado_cortado.png")
+        elif color == "Blanco": 
+            self.icono = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_blanco.png")
+            self.icono_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_blanco_cortado.png")
+        
     def set_estado_cortado(self):
         self.estado=True
-    
+
     def set_conectado_a(self, conexion):
         self.conectado_a= conexion
-    
+        if self.conectado_a == "A": 
+            self.icono_letra = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/letra_a.png")
+            
+        elif self.conectado_a == "B": 
+            self.icono_letra = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/letra_b.png")
+            
+
     def set_estado_LED(self, estado: bool):
         self.LED = estado
+        if self.LED: 
+            self.icono_led = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/led_cables_encendido.png")
+        else: 
+            self.icono_led = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/led_cables_apagado.png")
+
     
 class Casilla: 
     def __init__(self, letra:str) -> None:
