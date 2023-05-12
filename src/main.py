@@ -23,9 +23,8 @@ GOLD = pygame.Color('#fcbf49')
 VANILLA = pygame.Color('#e9eb9e')
 WHITE = pygame.Color("#ffffff")
 GOLDEN = pygame.Color('#fcbf49')
-
-font = pygame.font.Font("src/font/Pixeled.ttf", 20)
-font1 = pygame.font.Font("src/font/Pixeled.ttf", 40)
+font = pygame.font.Font("graphics/Pixeled.ttf", 20)
+font1 = pygame.font.Font("graphics/Pixeled.ttf", 40)
 
 #background = pygame.image.load('graphics/background.png')
 
@@ -49,7 +48,7 @@ click = False
 def main_menu():
      while True:
         screen.fill(GOLDEN)
-        image = pygame.image.load("graphics/Bynary Bomb logo nobg.png")
+        image = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Bynary Bomb logo nobg.png")
         resized_image = pygame.transform.scale(image, (300, 300))
         screen.blit(resized_image, (350, 50))
         play_button = Button(screen, 100, 430, 200, 50, "JUGAR", (255,0,0))
@@ -88,7 +87,7 @@ def opcJugar():
     global n2
     list1 = DoublyLinkedList()
     list2 = DoublyLinkedList()
-    font2 = pygame.font.Font("src/font/Pixeled.ttf", 10)
+    font2 = pygame.font.Font("graphics/Pixeled.ttf", 10)
     for i in [0, 1, 2, 3]:
         list1.add_node(i)
     for i in [3, 4, 5]:
@@ -105,7 +104,7 @@ def opcJugar():
         play_button.draw()
         manual_button = Button(screen, 650, 430, 200, 50, "MANUAL", (255,0,0))
         manual_button.draw()
-        font1 = pygame.font.Font("src/font/Pixeled.ttf", 20)
+        font1 = pygame.font.Font("graphics/Pixeled.ttf", 20)
         text_surface = font1.render("AJUSTE DE BOMBA", True, (255, 255, 255))
         screen.blit(text_surface, (370, 35))
         atras1_button = Button(screen, 300, 150, 40, 40, "<", (255, 0, 0))
@@ -192,7 +191,7 @@ def moverLista2(modo): #modo: False-Retroceso, True-Avance
             a2 = a2.prev
 
 def archivo():
-    nombre_archivo = 'BINARY BOMB SQUAD MANUAL borrador.pdf'
+    nombre_archivo = 'Laboratorio-3-Estructura/src/files/BINARY BOMB SQUAD MANUAL borrador.pdf'
     ruta_proyecto = os.path.abspath(os.curdir)
 # Obtiene la ruta completa del archivo dentro de la carpeta del proyecto
     ruta_archivo = os.path.join(ruta_proyecto, nombre_archivo)
@@ -245,14 +244,14 @@ def game():
     escribir.limpiarArchivo()
     escribir.escribirConfiguracion(str(a1.data))
     escribir.escribirConfiguracion(str(a2.data))
-    image1 = pygame.image.load("src/graphics/Bynary Bomb logo nobg.png")
+    image1 = pygame.image.load("graphics/Bynary Bomb logo nobg.png")
     bombita = Bomba(duration, int(a1.data), int(a2.data), 10)
     bombita.asignar_modulos()
     pos = [module1, module2, module3, module4, module5]
     x = 0
     print(bombita.modulos)
     if a2.data == 3:
-        fondoM1 = pygame.image.load("src/graphics/Fondos/fondo_codigo.png")
+        fondoM1 = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_codigo.png")
         
     elif a2.data == 4:
         pass
@@ -300,7 +299,7 @@ def game():
         text_surface = font.render(time_text, True, WHITE)
         text_rect = text_surface.get_rect(center=(730,390))
         screen.blit(text_surface, text_rect)
-        fondotimer = pygame.image.load("src/graphics/Modulo Timer/fondo_timer.png")
+        fondotimer = pygame.image.load("graphics/Módulos/Módulos/Modulo Timer/fondo_timer.png")
         timer.blit(fondotimer,(0,0))
 
         pygame.display.update()

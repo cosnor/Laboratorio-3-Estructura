@@ -1,7 +1,7 @@
 class ManejoDeArchivos:
     
     def __init__(self) -> None:
-        self.rutaConfigjuego = "src/files/configuracion.txt"
+        self.rutaConfigjuego = "archivos/configuraciondeljuego.txt"
     
     def leerConfiguracion(self):
         archivo = open(self.rutaConfigjuego, "r")

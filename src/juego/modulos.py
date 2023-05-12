@@ -13,7 +13,7 @@ class Observador:
         pass
 
 class Modulo:
-    def __init__(self,pos) -> None:
+    def __init__(self) -> None:
         self.estado= False #False indica que no ha sido resuelto
         self.observadores = []
         self.pos = pos
@@ -33,7 +33,7 @@ class ModuloCablesBasicos(Modulo):
         self.franja = franja
     
     def dibujarFondo(self, pantalla):
-        fondo = pygame.image.load("src/graphics/Fondos/fondo_cables_simples.png")
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_cables_simples.png")
         pantalla.blit(fondo, (0, 0))
 
     def agregar_cables(self):
@@ -110,7 +110,7 @@ class ModuloCablesComplejos(Modulo):
         self.cables: List["Cable"]=[]
     
     def dibujarFondo(self, pantalla):
-        fondo = pygame.image.load("src/graphics/Fondos/fondo_cables_complejos.png")
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_cables_complejos.png")
         pantalla.blit(fondo, (0, 0))
 
     #Asignación de cables
@@ -216,7 +216,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
         self.seleccion4 = None
 
     def dibujarFondo(self, pantalla):
-        fondo = pygame.image.load("src/graphics/Fondos/fondo_memoria.png")
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_memoria.png")
         pantalla.blit(fondo, (0, 0))
 
     def agregar_lista(self): 
@@ -356,7 +356,7 @@ class ModuloCodigo(Modulo):
         self.posicion5 = []
 
     def dibujarFondo(self, pantalla):
-        fondo = pygame.image.load("src/graphics/Fondos/fondo_codigo.png")
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_codigo.png")
         pantalla.blit(fondo, (0, 0))
 
     def set_casillas_inicial(self):
@@ -491,9 +491,9 @@ class ModuloExigente(Modulo):
         self.hilo_reposo = None
     
     def dibujarFondo(self, pantalla):
-        fondo = pygame.image.load("src/graphics/Fondos/fondo_exigente.png")
+        fondo = pygame.image.load("graphics/Módulos/Módulos/Fondos/fondo_exigente.png")
         pantalla.blit(fondo, (0, 0))
-        
+
     def activar(self):
         self.estado=True
         self.hilo_temporizador = threading.Thread(target=self._temporizador)
