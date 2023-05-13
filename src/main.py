@@ -94,15 +94,16 @@ def new_menu():
         pygame.display.update()
 def main_menu():
      while True:
-        screen.fill(GOLDEN)
+        fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/fondo_Inicio.jpg")
+        screen.blit(fondo, (0, 0))
         image = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Bynary Bomb logo nobg.png")
-        resized_image = pygame.transform.scale(image, (300, 300))
-        screen.blit(resized_image, (350, 50))
-        play_button = Button(screen, 100, 430, 200, 50, "JUGAR", (255,0,0))
+        resized_image = pygame.transform.scale(image, (400, 400))
+        screen.blit(resized_image, (320, 0))
+        play_button = Button(screen, 100, 430, 200, 50, "JUGAR", (VINOTINTO))
         play_button.draw()
-        credits_button = Button(screen, 400, 430, 200, 50, "CRÉDITOS", (255,0,0))
+        credits_button = Button(screen, 400, 430, 200, 50, "CRÉDITOS", (VINOTINTO))
         credits_button.draw()
-        exit_button = Button(screen, 700, 430, 200, 50, "SALIR", (255,0,0))
+        exit_button = Button(screen, 700, 430, 200, 50, "SALIR", (VINOTINTO))
         exit_button.draw()
 
         click = False
@@ -280,7 +281,7 @@ def creditos():
     duration = 10
     fuente_titulo = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 36)
     fuente_creditos = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 24)
-
+    
     posicionbajada = 0
     while True:
         screen.fill(SILVER)
