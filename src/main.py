@@ -23,6 +23,8 @@ GOLD = pygame.Color('#fcbf49')
 VANILLA = pygame.Color('#e9eb9e')
 WHITE = pygame.Color("#ffffff")
 GOLDEN = pygame.Color('#fcbf49')
+SILVER = pygame.Color('#dbd4d3')
+VINOTINTO = pygame.Color('#9b1d20')
 font = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 20)
 font1 = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 40)
 
@@ -47,15 +49,16 @@ timer.fill(VANILLA)
 click = False
 def main_menu():
      while True:
-        screen.fill(GOLDEN)
+        fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/fondo_Inicio.jpg")
+        screen.blit(fondo, (0, 0))
         image = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Bynary Bomb logo nobg.png")
-        resized_image = pygame.transform.scale(image, (300, 300))
-        screen.blit(resized_image, (350, 50))
-        play_button = Button(screen, 100, 430, 200, 50, "JUGAR", (255,0,0))
+        resized_image = pygame.transform.scale(image, (400, 400))
+        screen.blit(resized_image, (320, 0))
+        play_button = Button(screen, 100, 430, 200, 50, "JUGAR", (VINOTINTO))
         play_button.draw()
-        credits_button = Button(screen, 400, 430, 200, 50, "CRÉDITOS", (255,0,0))
+        credits_button = Button(screen, 400, 430, 200, 50, "CRÉDITOS", (VINOTINTO))
         credits_button.draw()
-        exit_button = Button(screen, 700, 430, 200, 50, "SALIR", (255,0,0))
+        exit_button = Button(screen, 700, 430, 200, 50, "SALIR", (VINOTINTO))
         exit_button.draw()
 
         click = False
@@ -205,15 +208,50 @@ def archivo():
         print(f'El archivo {ruta_archivo} no existe.')
 
 def creditos():
+    creditos_movibles = [
+    "BINARY BOMB SQUAD",
+    "",
+    "INTEGRANTES DEL GRUPO:",
+    "1. MARÍA CAMILA OSORNO",
+    "2. JUAN FELIPE SANTOS",
+    "3. SAMUEL MATIZ",
+    "4. ALBERTO JOSÉ SANDOVAL",
+    "",
+    "DIRECTOR DEL PROYECTO:",
+    "1. MARÍA CAMILA OSORNO",
+    "",
+    "DIRECTOR ASISTENTE:",
+    "1. JUAN FELIPE SANTOS",
+    "",
+    "LÍDER DE DISEÑO:",
+    "1. SAMUEL MATIZ",
+    "",
+    "LÍDER DE PROGRAMACIÓN:",
+    "1. ALBERTO JOSÉ SANDOVAL",
+    ]
+    start_time = time.time()
+    duration = 10
+    fuente_titulo = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 36)
+    fuente_creditos = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 24)
+    
+    posicionbajada = 0
     while True:
-        screen.fill(BLACK)
-        font1 = pygame.font.Font(None, 24)
-        text_surface = font1.render("Info", True, (255, 255, 255))
-        screen.blit(text_surface, (100, 100))
-        font2 = pygame.font.Font(None, 12)
-        text_surface = font2.render("Info pequeña", True, (255, 255, 255))
-        screen.blit(text_surface, (100, 300))
-
+        screen.fill(SILVER)
+        posicion_y = 15
+        # Dibuja cada línea de crédito
+        for linea in creditos_movibles:
+            credito_superficie = fuente_creditos.render(linea, True, (BLACK))
+            credito_rect = credito_superficie.get_rect(center=(1000 // 2, posicion_y-posicionbajada))
+            screen.blit(credito_superficie, credito_rect)
+            posicion_y += 40
+        # Actualiza la pantalla
+        current_time = time.time()
+        print(current_time - start_time)
+        if current_time - start_time >= 0.5:
+            posicionbajada += 40 # Incrementar la posición vertical
+            start_time = current_time  # Reiniciar el tiempo de inicio
+        if posicionbajada >= 800:
+            main_menu()
         click = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -298,4 +336,4 @@ def game():
         pygame.display.update()
         clock.tick(60)
 
-opcJugar()
+main_menu()
