@@ -247,14 +247,15 @@ def game():
     image1 = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Bynary Bomb logo nobg.png")
     bombita = Bomba(duration, int(a1.data), int(a2.data), 10)
     bombita.asignar_modulos()
-    pos = [module1, module2, module3, module4, module5]
-    x = 0
-    for modulo in bombita.modulos:
+    
+    
+    while running:
+        pos = [module1, module2, module3, module4, module5]
+        x = 0
+        for modulo in bombita.modulos:
             modulo.dibujarFondo(pos[x])
             if x < a2.data -1:
                 x= x+1
-    
-    while running:
         bombita.colocarFranja(timer)
         x = 0
         screen.fill(BLACK)
@@ -265,7 +266,8 @@ def game():
                 modulo.dibujarElementos(pos[x])
             elif modulo.nombre == "Código": 
                 modulo.dibujarElementos(pos[x])
-                
+            elif modulo.nombre == "Memoria":
+                modulo.dibujarElementos(pos[x])
             if x < a2.data -1:
                 x= x+1
 
@@ -289,9 +291,6 @@ def game():
         screen.blit(module5, (402,293))
         screen.blit(timer, (625,293))
         
-
-        
-            
          # Calcular el tiempo restante
         current_time = time.time()
         elapsed_time = current_time - start_time

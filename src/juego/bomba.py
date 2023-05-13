@@ -3,7 +3,7 @@ from random import randint
 from juego.modulos import *
 
 
-class Bomba(Observador): 
+class Bomba(): 
     def __init__(self, tiempo, errores: int, modulos: int, id: int) -> None:
         self.id = id 
         self.tiempo = tiempo
@@ -58,7 +58,7 @@ class Bomba(Observador):
                     FRANJAS = ["amarilla", "rosada", "verde", "blanca"]
                     indice_elegido = randint(0, 3)
                     posicion = i
-                    nuevo_modulo = ModuloCablesBasicos(FRANJAS[indice_elegido], 1)
+                    nuevo_modulo = ModuloCablesBasicos(self, FRANJAS[indice_elegido], 1)
                     nuevo_modulo.agregar_cables()
                     self.franja = nuevo_modulo.franja
                     print(nuevo_modulo.franja)
@@ -66,7 +66,7 @@ class Bomba(Observador):
                     
 
                 elif modulo == "Cables complejos":
-                        nuevo_modulo = ModuloCablesComplejos(4)
+                        nuevo_modulo = ModuloCablesComplejos(self,  4)
                         nuevo_modulo.agregar_cables()
                         nuevo_modulo.conectar_cables()
                         nuevo_modulo.asignacion_LED()
@@ -74,7 +74,7 @@ class Bomba(Observador):
                         posicion = i
 
                 elif modulo == "Memoria":
-                        nuevo_modulo = ModuloPalabras(4)
+                        nuevo_modulo = ModuloPalabras(self, 4)
                         nuevo_modulo.agregar_lista()
                         self.modulos.append(nuevo_modulo)
                         posicion = i
@@ -88,13 +88,13 @@ class Bomba(Observador):
                                         "TEMAS", "NOTAS", "CREAR", "POINT", "ANTES",
                                         "TUPLA", "ARRAY", "BOMBA", "LINEA", "RUTAS"]
                         indice_elegido = randint(0, 34)
-                        nuevo_modulo = ModuloCodigo(LISTA_CODIGOS[indice_elegido], 3)
+                        nuevo_modulo = ModuloCodigo(self, LISTA_CODIGOS[indice_elegido], 3)
                         nuevo_modulo.set_casillas_inicial()
                         self.modulos.append(nuevo_modulo)
                         posicion = i
 
                 elif modulo == "Exigente":
-                        nuevo_modulo = ModuloExigente(2)
+                        nuevo_modulo = ModuloExigente(self, 2)
                         self.modulos.append(nuevo_modulo)
                         posicion = i
                         #! Hacer métodos de asignaciones y revisarlos
