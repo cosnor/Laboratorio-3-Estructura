@@ -11,8 +11,4 @@ class Juego():
         self.bomba =nueva_bomba
         self.bomba.asignar_modulos()
 
-        #Crear observadores
-        for modulo in nueva_bomba.modulos:
-            modulo.agregar_observador(nueva_bomba)
-            modulo.agregar_observador(Juego)
-
+        

@@ -16,14 +16,10 @@ class Bomba():
         self.linea_tiempo= None
         self.registro = None
         self.franja = None
-
-    def notificar_equivocacion(self):
-        if self.estado: 
-            self.equivocaciones = self.equivocaciones + 1
-            print("equivocacion")
-        if self.equivocaciones <= self.errores:
-            self.estado = "Detonada"
     
+    def notificar_equivocacion(self): 
+         self.equivocaciones += 1
+         
     def tiempo_agotado(self): 
         if self.tiempo == 0: 
             self.estado = "Detonada"  
@@ -97,7 +93,6 @@ class Bomba():
                         nuevo_modulo = ModuloExigente(self, 2)
                         self.modulos.append(nuevo_modulo)
                         posicion = i
-                        #! Hacer métodos de asignaciones y revisarlos
 
 
 
