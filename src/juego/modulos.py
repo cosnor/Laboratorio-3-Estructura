@@ -412,7 +412,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_memoria.png")
         pantalla.blit(fondo, (0, 0))
     
-    def dibujarElementos(self, pantalla):
+    def dibujarElementos(self, pantalla, posicionreal = None):
         texto1 = "NODO:    1    2    3   4"
         texto2 = f"ITEM:    {self.lista[0]}    {self.lista[1]}    {self.lista[2]}    {self.lista[3]}"
         frase1 = self.font.render(texto1, True, (0,0,0))
@@ -425,7 +425,23 @@ class ModuloPalabras(Modulo):  #Caso memoria
         elif self.estado_equivocacion: 
             led_rojo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_rojo_modulo.png")
             pantalla.blit(led_rojo, (0, 0))
-        
+        boton1 = ButtonM(pantalla,30,123,32,47,"1",(0,0,0,0))
+        boton2 = ButtonM(pantalla,65,123,35,47,"2",(0,0,0,0))
+        boton3 = ButtonM(pantalla,103,123,35,47,"3",(0,0,0,0))
+        boton4 = ButtonM(pantalla,140,123,35,47,"4",(0,0,0,0))
+        barra = ButtonM(pantalla, 65, 173, 73, 15, "", (0,0,0,0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+            boton1.handle_event1(event, posicionreal, lambda: print("hola"))
+            boton2.handle_event1(event, posicionreal, lambda: print("como"))
+            boton3.handle_event1(event, posicionreal, lambda: print("estas"))
+            boton4.handle_event1(event, posicionreal, lambda: print("tu"))
+            barra.handle_event1(event, posicionreal, lambda: print("?"))
 
     def agregar_lista(self): 
         shuffle(self.opciones)
@@ -780,7 +796,16 @@ class ModuloExigente(Modulo):
         super().__init__(Bomba, pos)
         self.nombre = "Exigente"
         self.estado=False
-        self.enunciados = ["", "", "", "", ""]
+        self.enunciados = [
+            "Los archivos se pueden leer y escribir secuencialmente o de forma aleatoria", 
+            "Las listas en Python son siempre de tamaño fijo y no se pueden cambiar una vez creadas", 
+            "Las pilas siguen el principio LIFO (Last In, First Out)", 
+            "Las colas siempre tienen un tamaño fijo y no se pueden ampliar o reducir", 
+            "Los archivos solo pueden contener datos de tipo texto",
+            "En una lista, los elementos se pueden acceder y modificar utilizando un índice numérico",
+            "En una lista circular, el último elemento está enlazado al primer elemento de la lista",
+            "Las listas doblemente enlazadas no permiten eliminar nodos de la lista",
+            "Una pila permite eliminar elementos en cualquier posición de la pila"]
         self.enunciado = None
         self.opciones = ["S", "N"]
         self.tiempo_restante = 20
@@ -792,6 +817,20 @@ class ModuloExigente(Modulo):
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_exigente.png")
         pantalla.blit(fondo, (0, 0))
 
+    def dibujarElementos(self, pantalla, posicionreal = None):
+        botonE1 = ButtonM(pantalla,28,123,70,47,"1",(0,0,0,0))
+        botonE2 = ButtonM(pantalla,103,123,70,47,"2",(0,0,0,0))
+        #rect <rect(245, 194, 35, 47)>
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+            botonE1.handle_event1(event, posicionreal, lambda: print("pro"))
+            botonE2.handle_event1(event, posicionreal, lambda: print("player"))
+        
     def activar(self):
         self.estado=True
         self.hilo_temporizador = threading.Thread(target=self._temporizador)

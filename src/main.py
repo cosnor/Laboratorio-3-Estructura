@@ -296,7 +296,30 @@ def game():
                 elif pos[x] == module5:
                     posC = (402,293)
                 modulo.dibujarElementos(pos[x], screen, posC)
-        
+            elif modulo.nombre == "Memoria":
+                if pos[x] == module1:
+                    posM = (180,71)
+                elif pos[x] == module2:
+                    posM = (402,71)
+                elif pos[x] == module3:
+                    posM = (625,71)
+                elif pos[x] == module4:
+                    posM = (180,293)
+                elif pos[x] == module5:
+                    posM = (402,293)
+                modulo.dibujarElementos(pos[x], posM)
+            elif modulo.nombre == "Exigente":
+                if pos[x] == module1:
+                    posexigente = (180,71)  
+                elif pos[x] == module2:
+                    posexigente = (402,71)
+                elif pos[x] == module3:
+                    posexigente = (625,71)
+                elif pos[x] == module4:
+                    posexigente = (180,293)
+                elif pos[x] == module5:
+                    posexigente = (402,293)
+                modulo.dibujarElementos(pos[x], posexigente)
             if x < a2.data -1:
                 x= x+1
 
@@ -337,6 +360,7 @@ def game():
         fondotimer = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Timer/fondo_timer.png")
         timer.blit(fondotimer,(0,0))
 
+        
         pygame.display.update()
         clock.tick(60)
 
