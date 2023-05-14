@@ -271,9 +271,13 @@ def creditos():
 def game():
     # Duración del temporizador en segundos
     duration = 300
-
+     # Duración del temporizador en segundos
+    duration = 300
+    remaining_time = duration
     # Obtener el tiempo de inicio
     start_time = time.time()
+    control = [False]
+    c=0
     
     global a1 #errores
     global a2 #modulos
@@ -357,7 +361,7 @@ def game():
                     posexigente = (180,293)
                 elif pos[x] == module5:
                     posexigente = (402,293)
-                modulo.dibujarElementos(pos[x], posexigente)
+                modulo.dibujarElementos(pos[x],remaining_time,control, posexigente)
             if x < a2.data -1:
                 x= x+1
 
@@ -401,4 +405,4 @@ def game():
         pygame.display.update()
         clock.tick(60)
 
-main_menu()
+opcJugar()
