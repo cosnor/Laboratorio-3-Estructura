@@ -100,19 +100,19 @@ def opcJugar():
     n2 = list2.head.next
     while True:
         screen.fill(GOLDEN)
-        play_button = Button(screen, 150, 430, 200, 50, "JUGAR", (255,0,0))
+        play_button = Button(screen, 150, 430, 200, 50, "JUGAR", (255,0,0), 20)
         play_button.draw()
-        manual_button = Button(screen, 650, 430, 200, 50, "MANUAL", (255,0,0))
+        manual_button = Button(screen, 650, 430, 200, 50, "MANUAL", (255,0,0), 20)
         manual_button.draw()
         font1 = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 20)
         text_surface = font1.render("AJUSTE DE BOMBA", True, (255, 255, 255))
         screen.blit(text_surface, (370, 35))
-        atras1_button = Button(screen, 300, 150, 40, 40, "<", (255, 0, 0))
-        adelante1_button = Button(screen, 650, 150, 40, 40, ">", (255, 0, 0))
+        atras1_button = Button(screen, 300, 150, 40, 40, "<", (255, 0, 0), 20)
+        adelante1_button = Button(screen, 650, 150, 40, 40, ">", (255, 0, 0), 20)
         adelante1_button.draw()
         atras1_button.draw()
-        atras2_button = Button(screen, 300, 290, 40, 40, "<", (255, 0, 0))
-        adelante2_button = Button(screen, 650, 290, 40, 40, ">", (255, 0, 0))
+        atras2_button = Button(screen, 300, 290, 40, 40, "<", (255, 0, 0), 20)
+        adelante2_button = Button(screen, 650, 290, 40, 40, ">", (255, 0, 0), 20)
         adelante2_button.draw()
         atras2_button.draw()
        #listica de errores
@@ -247,10 +247,10 @@ def game():
     image1 = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Bynary Bomb logo nobg.png")
     bombita = Bomba(duration, int(a1.data), int(a2.data), 10)
     bombita.asignar_modulos()
-    
+    pos = [module1, module2, module3, module4, module5]
+
     
     while running:
-        pos = [module1, module2, module3, module4, module5]
         x = 0
         for modulo in bombita.modulos:
             modulo.dibujarFondo(pos[x])
@@ -261,13 +261,42 @@ def game():
         screen.fill(BLACK)
         for modulo in bombita.modulos:
             if modulo.nombre == "Cables Básicos":
-                modulo.dibujarElementos(pos[x])
+                if pos[x] == module1:
+                    posCB = (180,71)
+                elif pos[x] == module2:
+                    posCB = (402,71)
+                elif pos[x] == module3:
+                    posCB = (625,71)
+                elif pos[x] == module4:
+                    posCB = (180,293)
+                elif pos[x] == module5:
+                    posCB = (402,293)
+                modulo.dibujarElementos(pos[x], screen, posCB)
             elif modulo.nombre == "Cables Complejos": 
-                modulo.dibujarElementos(pos[x])
+                if pos[x] == module1:
+                    posCC = (180,71)
+                elif pos[x] == module2:
+                    posCC = (402,71)
+                elif pos[x] == module3:
+                    posCC = (625,71)
+                elif pos[x] == module4:
+                    posCC = (180,293)
+                elif pos[x] == module5:
+                    posCC = (402,293)
+                modulo.dibujarElementos(pos[x], screen, posCC)
             elif modulo.nombre == "Código": 
-                modulo.dibujarElementos(pos[x])
-            elif modulo.nombre == "Memoria":
-                modulo.dibujarElementos(pos[x])
+                if pos[x] == module1:
+                    posC = (180,71)
+                elif pos[x] == module2:
+                    posC = (402,71)
+                elif pos[x] == module3:
+                    posC = (625,71)
+                elif pos[x] == module4:
+                    posC = (180,293)
+                elif pos[x] == module5:
+                    posC = (402,293)
+                modulo.dibujarElementos(pos[x], screen, posC)
+        
             if x < a2.data -1:
                 x= x+1
 

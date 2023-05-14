@@ -6,9 +6,8 @@ from random import shuffle
 import time
 import threading
 import pygame
+from juego.button import *
 from juego.bomba import *
-
-
 
 class Modulo:
     def __init__(self, Bomba, pos) -> None:
@@ -16,24 +15,53 @@ class Modulo:
         self.pos = pos
         self.bomba = Bomba
     
-    
-
 class ModuloCablesBasicos(Modulo):
     def __init__(self, Bomba, franja: str, pos:int) -> None:
         super().__init__(Bomba, pos)
         self.nombre = "Cables Básicos"
         self.cables: List["Cable"]=[]
+        self.rect =[]
         self.franja = franja
         self.estado_equivocacion = None
-    
+        self.image_rect = None
+        self.C1 = None
+        self.C2 = None
+        self.C3 = None
+        self.C4 = None
+
     def dibujarFondo(self, pantalla):
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_cables_simples.png")
         pantalla.blit(fondo, (0, 0))
     
-    def dibujarElementos(self, pantalla): 
-        for cable in self.cables: 
-            pantalla.blit(cable.icono_cable, (cable.posx, cable.posy))
+    def dibujarElementos(self, pantalla, pantalla1, pantalla2): 
+        x=0
 
+        self.C1 = ButtonJ(pantalla1, pantalla2, 35, 60, 120, 20, "xd", (0,0,0), 2)
+        self.C2 = ButtonJ(pantalla1, pantalla2, 35, 85, 120, 20, "xd", (0,0,0), 2)
+        self.C3 = ButtonJ(pantalla1, pantalla2, 35, 118, 120, 20, "xd", (0,0,0), 2)
+        self.C4 = ButtonJ(pantalla1, pantalla2, 35, 145, 120, 20, "xd", (0,0,0), 2)
+        
+     
+        for cable in self.cables: 
+            if cable.estado == False:
+                pantalla.blit(cable.icono_cable, self.rect[x])
+            else:
+                pantalla.blit(cable.icono_cable_cortado, self.rect[x])
+            if x < len(self.rect) -1:
+                x= x+1
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        exit()
+                self.C1.handle_event(event, lambda: self.cortar_cable(self.cables[0]))
+                self.C2.handle_event(event, lambda: self.cortar_cable(self.cables[1]))
+                self.C3.handle_event(event, lambda: self.cortar_cable(self.cables[2]))
+                self.C4.handle_event(event, lambda: self.cortar_cable(self.cables[3]))
+        
         if self.estado: 
             led_verde = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_verde_modulo.png")
             pantalla.blit(led_verde, (0, 0))
@@ -41,12 +69,24 @@ class ModuloCablesBasicos(Modulo):
             led_rojo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_rojo_modulo.png")
             pantalla.blit(led_rojo, (0, 0))
     
+    def handle_event(self, event, pantalla):
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for cable in self.cables: 
+                    diferencia = (event.pos[0]-90 - pantalla[0], event.pos[1]-64 - pantalla[1])
+                    
+                    if cable.rect.collidepoint(diferencia):
+                        self.cortar_cable(cable)
+            
     def agregar_cables(self):
         #Asignación aleatoria del orden de los cables
         LISTA_COLORES = ["Rojo", "Azul", "Negro", "Blanco"]
         shuffle(LISTA_COLORES)
         for i in range(0,4):
             if i == 0: 
+                self.rect.append(pygame.Rect(0,1,10,10))                
                 if LISTA_COLORES[i] == "Rojo": 
                     self.cables.append(CableRojo(color=LISTA_COLORES[i], posx= 0, posy = 1))
                 elif LISTA_COLORES[i] == "Azul":
@@ -56,6 +96,7 @@ class ModuloCablesBasicos(Modulo):
                 elif LISTA_COLORES[i] == "Blanco":
                     self.cables.append(CableBlanco(color=LISTA_COLORES[i], posx= 0, posy = 1))
             elif i == 1: 
+                self.rect.append(pygame.Rect(0,30,10,10))                
                 if LISTA_COLORES[i] == "Rojo": 
                     self.cables.append(CableRojo(color=LISTA_COLORES[i], posx= 0, posy = 30))
                 elif LISTA_COLORES[i] == "Azul":
@@ -65,6 +106,7 @@ class ModuloCablesBasicos(Modulo):
                 elif LISTA_COLORES[i] == "Blanco":
                     self.cables.append(CableBlanco(color=LISTA_COLORES[i], posx= 0, posy = 30))
             elif i == 2: 
+                self.rect.append(pygame.Rect(0,60,10,10))
                 if LISTA_COLORES[i] == "Rojo": 
                     self.cables.append(CableRojo(color=LISTA_COLORES[i], posx= 0, posy = 60))
                 elif LISTA_COLORES[i] == "Azul":
@@ -74,6 +116,7 @@ class ModuloCablesBasicos(Modulo):
                 elif LISTA_COLORES[i] == "Blanco":
                     self.cables.append(CableBlanco(color=LISTA_COLORES[i], posx= 0, posy = 60))
             elif i == 3: 
+                self.rect.append(pygame.Rect(0,90,10,10))
                 if LISTA_COLORES[i] == "Rojo": 
                     self.cables.append(CableRojo(color=LISTA_COLORES[i], posx= 0, posy = 90))
                 elif LISTA_COLORES[i] == "Azul":
@@ -139,8 +182,7 @@ class ModuloCablesBasicos(Modulo):
                 self.bomba.notificar_equivocacion()  
 
         if self.franja == "blanca": 
-            #!TO DO: Cambiar a cables normales
-            if CableComplejo == None: 
+            if CableBasico[1].color == self.cables[2].color: 
                 self.estado = True
                 print("Modulo desactivado")
             else: 
@@ -154,43 +196,106 @@ class ModuloCablesComplejos(Modulo):
         self.nombre = "Cables Complejos"
         self.cables: List["Cable"]=[]
         self.estado_equivocacion = False
+        self.rect = []
+        self.C1 = None
+        self.C2 = None
+        self.C3 = None
+        self.C4 = None
     
     def dibujarFondo(self, pantalla):
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_cables_complejos.png")
         pantalla.blit(fondo, (0, 0))
     
-    def dibujarElementos(self, pantalla):
+    def dibujarElementos(self, pantalla, pantalla1, pantalla2):
+        
+        self.C1 = ButtonJ(pantalla1, pantalla2, 34, 70, 10, 100, "xd", (0,0,0), 2)
+        self.C2 = ButtonJ(pantalla1, pantalla2, 56, 70, 10, 100, "xd", (0,0,0), 2)
+        self.C3 = ButtonJ(pantalla1, pantalla2, 80, 70, 10, 100, "xd", (0,0,0), 2)
+        self.C4 = ButtonJ(pantalla1, pantalla2, 104, 70, 10, 100, "xd", (0,0,0), 2)
+        self.ok = ButtonJ(pantalla1, pantalla2, 139, 98, 40, 40, "xd", (0,0,0), 2)
         for i, cable in enumerate(self.cables): 
             if i == 0: 
-                pantalla.blit(cable.icono, (0,0))
+                #self.rect.append(pygame.Rect(0, 0, 10, 10))
+                #self.C1 = ButtonJ(pantalla1, pantalla2, 0, 0, 20, 5, "xd", (0,0,0), 2)
+                if cable.estado == False:
+                    pantalla.blit(cable.icono, (0,0))
+                else:
+                    pantalla.blit(cable.icono_cortado, (0, 0))
                 pantalla.blit(cable.icono_led, (0,0))
                 pantalla.blit(cable.icono_letra, (0,0))
             elif i == 1: 
-                pantalla.blit(cable.icono, (22,0))
+                #self.rect.append(pygame.Rect(22, 0, 10, 10))
+                #self.C2 = ButtonJ(pantalla1, pantalla2, 22, 0, 20, 5, "xd", (0,0,0), 2)
+                if cable.estado == False:
+                    pantalla.blit(cable.icono, (22,0))
+                else:
+                    pantalla.blit(cable.icono_cortado, (22, 0))
                 pantalla.blit(cable.icono_led, (22,0))
                 pantalla.blit(cable.icono_letra, (22,0))
             elif i == 2: 
-                pantalla.blit(cable.icono, (46,0))
+                #self.rect.append(pygame.Rect(46, 0, 10, 10))
+                #self.C3 = ButtonJ(pantalla1, pantalla2, 46, 0, 20, 5, "xd", (0,0,0), 2)
+                if cable.estado == False:
+                    pantalla.blit(cable.icono, (46,0))
+                else:
+                    pantalla.blit(cable.icono_cortado, (46, 0))
                 pantalla.blit(cable.icono_led, (46,0))
                 pantalla.blit(cable.icono_letra, (46,0))
             elif i == 3: 
-                pantalla.blit(cable.icono, (70,0))
+                #self.rect.append(pygame.Rect(70, 0, 10, 10))
+                #self.C4 = ButtonJ(pantalla1, pantalla2, 70, 0, 20, 5, "xd", (0,0,0), 2)
+                if cable.estado == False:
+                    pantalla.blit(cable.icono, (70,0))
+                else:
+                    pantalla.blit(cable.icono_cortado, (70, 0))
                 pantalla.blit(cable.icono_led, (70,0))
                 pantalla.blit(cable.icono_letra, (70,0))
-        
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        exit()
+                self.C1.handle_event(event, lambda: self.cortar_cable(self.cables[0]))
+                self.C2.handle_event(event, lambda: self.cortar_cable(self.cables[1]))
+                self.C3.handle_event(event, lambda: self.cortar_cable(self.cables[2]))
+                self.C4.handle_event(event, lambda: self.cortar_cable(self.cables[3]))
+                self.ok.handle_event(event, lambda: self.validacion_final())
+    
         if self.estado: 
             led_verde = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_verde_modulo.png")
             pantalla.blit(led_verde, (0, 0))
         elif self.estado_equivocacion: 
             led_rojo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_rojo_modulo.png")
             pantalla.blit(led_rojo, (0, 0))
+    
+    def handle_event(self, event, pantalla):
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for cable in self.cables: 
+                    diferencia = (event.pos[0]-35 - pantalla[0], event.pos[1]-110 - pantalla[1])
+                    print(diferencia)
+                    if cable.rect.collidepoint(diferencia):
+                        self.cortar_cable(cable)
             
     #Asignación de cables
     def agregar_cables(self):
         LISTA_COLORES = ["Naranja", "Morado", "Naranja y Morado", "Blanco"]
         for i in range(0,4):
             indice_elegido = randint(0,3)
-            self.cables.append(CableComplejo(color=LISTA_COLORES[indice_elegido]))
+            if i == 0:
+                self.cables.append(CableComplejo(LISTA_COLORES[indice_elegido], 0,0))
+            elif i == 1:
+                self.cables.append(CableComplejo(LISTA_COLORES[indice_elegido], 22,0))
+            elif i == 2:
+                self.cables.append(CableComplejo(LISTA_COLORES[indice_elegido], 46,0))
+            elif i == 3:
+                self.cables.append(CableComplejo(LISTA_COLORES[indice_elegido], 70,0))
 
     #Asignación de la conexión de los cables a A y B
     def conectar_cables(self):
@@ -209,7 +314,7 @@ class ModuloCablesComplejos(Modulo):
     #Función para cortar un cable
     def cortar_cable(self, CableComplejo: object): 
         CableComplejo.set_estado_cortado()
-        self.validacion(CableComplejo)
+        self.validacion_cable(CableComplejo)
     
     #Se valida al cortar un cable
     def validacion_cable(self, CableComplejo):
@@ -452,10 +557,14 @@ class ModuloPalabras(Modulo):  #Caso memoria
     
     
 class ModuloCodigo(Modulo):
-    i1 = 0; i2 = 0;  i3 = 0;  i4 = 0; i5 = 0 
     def __init__(self, Bomba, codigo:str, pos:int) -> None:
         super().__init__(Bomba, pos)
         self.nombre = "Código"
+        self.i1 = 0
+        self.i2 = 0
+        self.i3 = 0
+        self.i4 = 0
+        self.i5 = 0
         self.codigo = codigo
         self.casilla1 = None
         self.casilla2 = None 
@@ -467,13 +576,25 @@ class ModuloCodigo(Modulo):
         self.posicion3 = []
         self.posicion4 = []
         self.posicion5 = []
+        self.estado_equivocacion = False
         self.font = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 12)
 
     def dibujarFondo(self, pantalla):
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_codigo.png")
         pantalla.blit(fondo, (0, 0))
     
-    def dibujarElementos(self, pantalla): 
+    def dibujarElementos(self, pantalla, pantalla1, pantalla2): 
+        button1U = ButtonJ(pantalla1, pantalla2, 42, 65, 20, 5, "xd", (0,0,0), 2)
+        button2U = ButtonJ(pantalla1, pantalla2, 68, 65, 20, 5, "xd", (0,0,0), 2)
+        button3U = ButtonJ(pantalla1, pantalla2, 92, 65, 20, 5, "xd", (0,0,0), 2)
+        button4U = ButtonJ(pantalla1, pantalla2, 118, 65, 20, 5, "xd", (0,0,0), 2)
+        button5U = ButtonJ(pantalla1,pantalla2, 142, 65, 20, 5, "xd", (0,0,0), 2)
+        button1D = ButtonJ(pantalla1, pantalla2, 42, 131, 20, 5, "xd", (0,0,0), 2)
+        button2D = ButtonJ(pantalla1,pantalla2, 68, 131, 20, 5, "xd", (0,0,0), 2)
+        button3D = ButtonJ(pantalla1,pantalla2, 92, 131, 20, 5, "xd", (0,0,0), 2)
+        button4D = ButtonJ(pantalla1,pantalla2, 118, 131, 20, 5, "xd", (0,0,0), 2)
+        button5D = ButtonJ(pantalla1,pantalla2, 142, 131, 20, 5, "xd", (0,0,0), 2)
+        buttonOk = ButtonJ(pantalla1,pantalla2, 82, 152, 50, 25, "xd", (0,0,0), 2)
         letra1 = self.font.render(self.casilla1.letra, True, (0,0,0))
         letra2 = self.font.render(self.casilla2.letra, True, (0,0,0))
         letra3 = self.font.render(self.casilla3.letra, True, (0,0,0))
@@ -484,6 +605,55 @@ class ModuloCodigo(Modulo):
         pantalla.blit(letra3, (96,80))
         pantalla.blit(letra4, (121,80))
         pantalla.blit(letra5, (147,80))
+        button1U.draw()
+        button2U.draw()
+        button3U.draw()
+        button4U.draw()
+        button5U.draw()
+        button1D.draw()
+        button2D.draw()
+        button3D.draw()
+        button4D.draw()
+        button5D.draw()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    exit()
+            button1U.handle_event(event, lambda: self.anterior_posicion(1))
+            button2U.handle_event(event, lambda: self.anterior_posicion(2))
+            button3U.handle_event(event, lambda: self.anterior_posicion(3))
+            button4U.handle_event(event, lambda: self.anterior_posicion(4))
+            button5U.handle_event(event, lambda: self.anterior_posicion(5))
+            button1D.handle_event(event, lambda: self.siguiente_posicion(1))
+            button2D.handle_event(event, lambda: self.siguiente_posicion(2))
+            button3D.handle_event(event, lambda: self.siguiente_posicion(3))
+            button4D.handle_event(event, lambda: self.siguiente_posicion(4))
+            button5D.handle_event(event, lambda: self.siguiente_posicion(5))
+            buttonOk.handle_event(event, lambda: self.validar())
+
+        if self.estado: 
+            led_verde = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_verde_modulo.png")
+            pantalla.blit(led_verde, (0, 0))
+        elif self.estado_equivocacion: 
+            led_rojo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_rojo_modulo.png")
+            pantalla.blit(led_rojo, (0, 0))
+
+    def not_in_lista(self, letra, lista): 
+        if lista == []: 
+            return True
+        else:
+            LISTA_AUX = [] 
+            for elemento in lista: 
+                LISTA_AUX.append(elemento.letra)
+            
+            if letra in LISTA_AUX: 
+                return False
+            else: 
+                return True
 
     def set_casillas_inicial(self):
         LISTA_LETRAS= ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L","M", "N", "O", "P","Q",
@@ -495,25 +665,25 @@ class ModuloCodigo(Modulo):
         self.posicion4.append(Casilla(self.codigo[3]))
         self.posicion5.append(Casilla(self.codigo[4]))
 
-        for i in range(0,6):
+        for i in range(0,7):
             letra = LISTA_LETRAS[randint(0, 24)]
-            while(letra == self.codigo[0]):
+            while(letra == self.codigo[0] or self.not_in_lista(letra, self.posicion1) == False):
                 letra = LISTA_LETRAS[randint(0, 24)]
             self.posicion1.append(Casilla(letra))
             letra = LISTA_LETRAS[randint(0, 24)]
-            while(letra == self.codigo[1]):
+            while(letra == self.codigo[1] or self.not_in_lista(letra, self.posicion2) == False):
                 letra = LISTA_LETRAS[randint(0, 24)]
             self.posicion2.append(Casilla(letra))
             letra = LISTA_LETRAS[randint(0, 24)]
-            while(letra == self.codigo[2]):
+            while(letra == self.codigo[2] or self.not_in_lista(letra, self.posicion3) == False):
                 letra = LISTA_LETRAS[randint(0, 24)]
             self.posicion3.append(Casilla(letra))
             letra = LISTA_LETRAS[randint(0, 24)]
-            while(letra == self.codigo[3]):
+            while(letra == self.codigo[3] or self.not_in_lista(letra, self.posicion4) == False):
                 letra = LISTA_LETRAS[randint(0, 24)]
             self.posicion4.append(Casilla(letra))
             letra = LISTA_LETRAS[randint(0, 24)]
-            while(letra == self.codigo[4]):
+            while(letra == self.codigo[4] or self.not_in_lista(letra, self.posicion5) == False):
                 letra = LISTA_LETRAS[randint(0, 24)]
             self.posicion5.append(Casilla(letra))
         
@@ -528,70 +698,71 @@ class ModuloCodigo(Modulo):
         self.casilla3 = self.posicion3[0] 
         self.casilla4 = self.posicion4[0]
         self.casilla5 = self.posicion5[0]
+        print(self.codigo)
 
-    def siguiente_posicion(self, columna:int, i1, i2, i3, i4, i5):
+    def siguiente_posicion(self, columna:int):
         if columna == 1: 
             if self.casilla1.letra == self.posicion1[-1].letra: 
-                return "Ultima letra alcanzada"
+                print("Ultima letra alcanzada")
             else: 
-                self.casilla1 = self.posicion1[i1+1]
-                i1+=1
+                self.casilla1 = self.posicion1[self.i1+1]
+                self.i1+=1
         if columna == 2: 
             if self.casilla2.letra == self.posicion2[-1].letra: 
-                return "Ultima letra alcanzada"
+                print("Ultima letra alcanzada")
             else: 
-                self.casilla2 = self.posicion2[i2+1]
-                i2+=1
+                self.casilla2 = self.posicion2[self.i2+1]
+                self.i2+=1
         if columna == 3: 
             if self.casilla3.letra == self.posicion3[-1].letra: 
-                return "Ultima letra alcanzada"
+                print("Ultima letra alcanzada")
             else: 
-                self.casilla3 = self.posicion3[i3+1]
-                i3+=1
+                self.casilla3 = self.posicion3[self.i3+1]
+                self.i3+=1
         if columna == 4: 
             if self.casilla4.letra == self.posicion4[-1].letra: 
-                return "Ultima letra alcanzada"
+                print("Ultima letra alcanzada")
             else: 
-                self.casilla4 = self.posicion4[i4+1]
-                i4+=1
+                self.casilla4 = self.posicion4[self.i4+1]
+                self.i4+=1
         if columna == 5: 
             if self.casilla5.letra == self.posicion5[-1].letra: 
-                return "Ultima letra alcanzada"
+                print("Ultima letra alcanzada")
             else: 
-                self.casilla5 = self.posicion5[i5+1]
-                i5+=1
+                self.casilla5 = self.posicion5[self.i5+1]
+                self.i5+=1
     
-    def anterior_posicion(self, columna:int, i1, i2, i3, i4, i5):
+    def anterior_posicion(self, columna:int):
         if columna == 1: 
             if self.casilla1.letra == self.posicion1[0].letra: 
-                return "Primera letra alcanzada"
+                print("Primera letra alcanzada") 
             else: 
-                self.casilla1 = self.posicion1[i1-1]
-                i1-=1
+                self.casilla1 = self.posicion1[self.i1-1]
+                self.i1-=1
         if columna == 2: 
             if self.casilla2.letra == self.posicion2[0].letra: 
-                return "Primera letra alcanzada"
+                print("Primera letra alcanzada")
             else: 
-                self.casilla2 = self.posicion2[i2-1]
-                i2-=1
+                self.casilla2 = self.posicion2[self.i2-1]
+                self.i2-=1
         if columna == 3: 
             if self.casilla3.letra == self.posicion3[0].letra: 
-                return "Ultima letra alcanzada"
+                print("Primera letra alcanzada")
             else: 
-                self.casilla3 = self.posicion3[i3-1]
-                i3-=1
+                self.casilla3 = self.posicion3[self.i3-1]
+                self.i3-=1
         if columna == 4: 
             if self.casilla4.letra == self.posicion4[0].letra: 
-                return "Ultima letra alcanzada"
+                print("Primera letra alcanzada")
             else: 
-                self.casilla4 = self.posicion4[i4-1]
-                i4-=1
+                self.casilla4 = self.posicion4[self.i4-1]
+                self.i4-=1
         if columna == 5: 
             if self.casilla5.letra == self.posicion5[0].letra: 
-                return "Ultima letra alcanzada"
+                print("Primera letra alcanzada")
             else: 
-                self.casilla5 = self.posicion5[i5-1]
-                i5-=1
+                self.casilla5 = self.posicion5[self.i5-1]
+                self.i5-=1
 
     def validar(self):
         if (self.casilla1.letra == self.codigo[0] and self.casilla2.letra == self.codigo[1] and self.casilla3.letra == self.codigo[2]
@@ -692,6 +863,7 @@ class CableRojo(CableBasico):
         self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_rojo_cortado.png")
         self.posx = posx 
         self.posy = posy
+        self.rect = pygame.Rect(self.posx, self.posy, 10, 20)
 
 class CableBlanco(CableBasico): 
     def __init__(self, color, posx, posy) -> None:
@@ -700,6 +872,7 @@ class CableBlanco(CableBasico):
         self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_blanco_cortado.png")
         self.posx = posx 
         self.posy = posy
+        self.rect = pygame.Rect(self.posx, self.posy, 10, 20)
 
 class CableNegro(CableBasico): 
     def __init__(self, color, posx, posy) -> None:
@@ -708,6 +881,8 @@ class CableNegro(CableBasico):
         self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_negro_cortado.png")
         self.posx = posx 
         self.posy = posy
+        self.rect = pygame.Rect(self.posx, self.posy, 10, 20)
+
 
 class CableAzul(CableBasico): 
     def __init__(self, color, posx, posy) -> None:
@@ -716,9 +891,10 @@ class CableAzul(CableBasico):
         self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_azul_cortado.png")
         self.posx = posx 
         self.posy = posy
+        self.rect = pygame.Rect(self.posx, self.posy, 10, 20)
 
 class CableComplejo(Cable):
-    def __init__(self, color: str) -> None:
+    def __init__(self, color: str, posx, posy) -> None:
         super().__init__()
         self.color= color
         self.conectado_a= None
@@ -727,6 +903,9 @@ class CableComplejo(Cable):
         self.icono_cortado = None
         self.icono_led = None
         self.icono_letra = None
+        self.posx= posx
+        self.posy = posy
+        self.rect = pygame.Rect(self.posx, self.posy, 10, 20)
 
         if color == "Naranja":
             self.icono = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_naranja.png")
