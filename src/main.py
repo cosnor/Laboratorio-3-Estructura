@@ -445,6 +445,7 @@ def game():
         bombita.tiempo = remaining_time
         bombita.tiempo_agotado()
         bombita.equivocaciones_limite()
+        bombita.victoria()
         if bombita.estado == "Detonada":
             terminarM(False, str(a2.data), time_text, str(bombita.equivocaciones), str(a1.data))
         if bombita.estado == "Desactivada":

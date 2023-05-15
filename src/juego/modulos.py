@@ -13,7 +13,7 @@ class Modulo:
     def __init__(self, Bomba, pos) -> None:
         self.estado= False #False indica que no ha sido resuelto
         self.pos = pos
-        self.bomba = Bomba
+        self.Bomba = Bomba
     
 class ModuloCablesBasicos(Modulo):
     def __init__(self, Bomba, franja: str, pos:int) -> None:
@@ -130,55 +130,65 @@ class ModuloCablesBasicos(Modulo):
             if self.cables[0].color =="Rojo" and CableBasico.color == "Rojo":  
                 self.estado = True
                 print("Modulo desactivado")
+                self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
             elif self.cables[1].color == "Azul" and CableBasico.color == self.cables[2].color:
                 self.estado = True
                 print("Modulo desactivado")
+                self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
             elif CableBasico.color == self.cables[3].color:
                 self.estado = True
                 print("Modulo desactivado")
+                self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
             else:             
                 print("Equivocación")
                 self.estado_equivocacion = True
-                self.bomba.notificar_equivocacion()          
+                self.Bomba.notificar_equivocacion()          
 
         if self.franja == "rosada":
             if self.cables[3].color == "Blanco" and CableBasico.color == "Blanco":
                 self.estado = True
                 print("Modulo desactivado")
+                self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
             elif self.cables[2].color == "Azul" and CableBasico.color == self.cables.color[1]:
                 self.estado = True
                 print("Modulo desactivado")
+                self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
             elif CableBasico.color == self.cables[2].color:
                 self.estado = True
                 print("Modulo desactivado")
+                self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
             else: 
                 print("Equivocación")
                 self.estado_equivocacion = True
-                self.bomba.notificar_equivocacion()       
+                self.Bomba.notificar_equivocacion()       
 
         if self.franja == "verde":
             if self.cables[1].color == "Negro" and CableBasico.color == "Negro":
                 self.estado = True
                 print("Modulo desactivado")
+                self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
             elif self.cables[3].color == "Negro" and CableBasico.color == "Negro":
                 self.estado = True
                 print("Modulo desactivado")
+                self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
             elif CableBasico.color == self.cables[0].color: 
                 self.estado = True
                 print("Modulo desactivado")
+                self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
             else: 
                 print("Equivocación")
                 self.estado_equivocacion = True
-                self.bomba.notificar_equivocacion()  
+                self.Bomba.notificar_equivocacion()  
 
         if self.franja == "blanca": 
             if CableBasico.color == self.cables[2].color: 
                 self.estado = True
                 print("Modulo desactivado")
+                self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
             else: 
                 print("Equivocación")
                 self.estado_equivocacion = True
-                self.bomba.notificar_equivocacion() 
+                self.Bomba.notificar_equivocacion() 
 
 class ModuloCablesComplejos(Modulo):
     def __init__(self, Bomba, pos:int) -> None:
@@ -320,7 +330,7 @@ class ModuloCablesComplejos(Modulo):
                 print("Cable cortado con éxito")
             else: 
                 print("Equivocación")
-                self.bomba.notificar_equivocacion() 
+                self.Bomba.notificar_equivocacion() 
                 self.estado_equivocacion = True
 
         elif CableComplejo.conectado_a == "B":
@@ -332,7 +342,7 @@ class ModuloCablesComplejos(Modulo):
                 print("Cable cortado con éxito")
             else: 
                 print("Equivocación")
-                self.bomba.notificar_equivocacion() 
+                self.Bomba.notificar_equivocacion() 
                 self.estado_equivocacion = True
 
         else: print("Error en la asignación de cables")
@@ -344,17 +354,17 @@ class ModuloCablesComplejos(Modulo):
                 if cable.conectado_a == "A":
                     if cable.color== "Naranja y Morado" and cable.LED == False:
                         self.estado_equivocacion = True
-                        self.bomba.notificar_equivocacion() 
+                        self.Bomba.notificar_equivocacion() 
                         return "Equivocación"
 
                     elif cable.LED and cable.color== "Blanco":
                         self.estado_equivocacion = True
-                        self.bomba.notificar_equivocacion() 
+                        self.Bomba.notificar_equivocacion() 
                         return "Equivocación"
         
                     elif cable.color == "Naranja" and cable.LED == False: 
                         self.estado_equivocacion = True
-                        self.bomba.notificar_equivocacion() 
+                        self.Bomba.notificar_equivocacion() 
                         return "Equivocación"
                         
                     else: 
@@ -362,23 +372,24 @@ class ModuloCablesComplejos(Modulo):
                 elif cable.conectado_a == "B":
                     if cable.color== "Naranja y Morado" and cable.LED == False:
                         self.estado_equivocacion = True
-                        self.bomba.notificar_equivocacion() 
+                        self.Bomba.notificar_equivocacion() 
                         return "Equivocación"
 
                     elif cable.LED and cable.color== "Blanco":
                         self.estado_equivocacion = True
-                        self.bomba.notificar_equivocacion() 
+                        self.Bomba.notificar_equivocacion() 
                         return "Equivocación"
                         
                     elif cable.color == "Naranja" and cable.LED == False: 
                         self.estado_equivocacion = True
-                        self.bomba.notificar_equivocacion() 
+                        self.Bomba.notificar_equivocacion() 
                         return "Equivocación"
                 
                     else: 
                         print("Cable no cortado correcto")
         
         print("Modulo desactivado")
+        self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
         self.estado = True
 
 
@@ -461,7 +472,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    self.bomba.notificar_equivocacion() 
+                    self.Bomba.notificar_equivocacion() 
                     #! Añadir sonido
                     self.estado_equivocacion = True
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
@@ -474,7 +485,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    self.bomba.notificar_equivocacion() 
+                    self.Bomba.notificar_equivocacion() 
                     self.estado_equivocacion = True
                 pass
             else: 
@@ -489,7 +500,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    self.bomba.notificar_equivocacion() 
+                    self.Bomba.notificar_equivocacion() 
                     self.estado_equivocacion = True
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
@@ -501,7 +512,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    self.bomba.notificar_equivocacion() 
+                    self.Bomba.notificar_equivocacion() 
                     self.estado_equivocacion = True
                 
             else: 
@@ -516,7 +527,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    self.bomba.notificar_equivocacion() 
+                    self.Bomba.notificar_equivocacion() 
                     self.estado_equivocacion = True
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
@@ -528,7 +539,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     self.seleccionar(int, int)
                 else: 
                     print("Equivocación")
-                    self.bomba.notificar_equivocacion() 
+                    self.Bomba.notificar_equivocacion() 
                     self.estado_equivocacion = True
                 pass
             else: 
@@ -543,7 +554,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     
                 else: 
                     print("Equivocación")
-                    self.bomba.notificar_equivocacion() 
+                    self.Bomba.notificar_equivocacion() 
                     self.estado_equivocacion = True
                     #Validar si se equivoca y le quedan errores, volver a seleccionar
                 pass
@@ -555,7 +566,7 @@ class ModuloPalabras(Modulo):  #Caso memoria
                     
                 else: 
                     print("Equivocación")
-                    self.bomba.notificar_equivocacion() 
+                    self.Bomba.notificar_equivocacion() 
                     self.estado_equivocacion = True
                 
         else: 
@@ -776,10 +787,10 @@ class ModuloCodigo(Modulo):
             and self.casilla4.letra == self.codigo[3] and self.casilla5.letra == self.codigo[4]): 
             print("Módulo resuelto")
             self.estado = True 
-
+            self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
         else: 
             print("Equivocación")
-            self.bomba.notificar_equivocacion() 
+            self.Bomba.notificar_equivocacion() 
 
 
 class ModuloExigente(Modulo):

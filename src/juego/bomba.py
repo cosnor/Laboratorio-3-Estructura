@@ -39,7 +39,10 @@ class Bomba():
         timer.blit(fran, (0,0))
 
     def asignar_modulos(self): 
-        LISTA_MODULOS = ["Cables simples", "Cables complejos", "Memoria", "Código", "Exigente"]
+        if self.numero_modulos == 3:
+            LISTA_MODULOS = ["Cables simples", "Cables complejos", "Código"]
+        else:
+             LISTA_MODULOS = ["Cables simples", "Cables complejos", "Memoria", "Código", "Exigente"]
         LISTA_MODULOS_SELECCIONADOS = []
         POSICIONES = [1, 2, 3, 4, 5]
         POSICIONESSELEC = []
