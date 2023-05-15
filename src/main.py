@@ -13,7 +13,8 @@ import time
 pygame.init()
 screen = pygame.display.set_mode((1000,562))
 pygame.display.set_caption("Binary Bomb Squad")
-
+icon = pygame.image.load("Laboratorio-3-Estructura/src/graphics/icono.png")
+pygame.display.set_icon(icon)
 clock = pygame.time.Clock()
 
 BLACK = pygame.Color("#0a100d")
@@ -66,6 +67,8 @@ def new_menu():
         for event in pygame.event.get():
             pos = pygame.mouse.get_pos()
             if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     if hitboxplaybutton.collidepoint(pos):
@@ -135,6 +138,9 @@ def opcJugar():
     list1 = DoublyLinkedList()
     list2 = DoublyLinkedList()
     font2 = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 10)
+    fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/bombsettings/bombsettingsbg.png")
+    menubg = pygame.image.load("Laboratorio-3-Estructura/src/graphics/menu/menubg.png")
+    screen.blit(menubg, (0,0))
     for i in [0, 1, 2, 3]:
         list1.add_node(i)
     for i in [3, 4, 5]:
@@ -146,59 +152,61 @@ def opcJugar():
     b2 = list2.head.prev
     n2 = list2.head.next
     while True:
-        screen.fill(GOLDEN)
-        menu_button = Button(screen, 10, 10, 33, 33, "x", (255,0,0), 0)
+        #screen.fill(GOLDEN)
+        screen.blit(fondo, (0,0))
+        menu_button = Button(screen, 10, 10, 33, 33, "x", (0,0,0), 0)
         menu_button.draw()
-        play_button = Button(screen, 150, 430, 200, 50, "JUGAR", (255,0,0), 20)
+        play_button = Button(screen, 620, 405, 200, 50, "JUGAR", (0,0,0), 20) #150
         play_button.draw()
-        manual_button = Button(screen, 650, 430, 200, 50, "MANUAL", (255,0,0), 20)
+        manual_button = Button(screen, 180, 405, 200, 50, "MANUAL", (0,0,0), 20)
         manual_button.draw()
         font1 = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 20)
         text_surface = font1.render("AJUSTE DE BOMBA", True, (255, 255, 255))
-        screen.blit(text_surface, (370, 35))
-        atras1_button = Button(screen, 300, 150, 40, 40, "<", (255, 0, 0), 20)
-        adelante1_button = Button(screen, 650, 150, 40, 40, ">", (255, 0, 0), 20)
+        screen.blit(text_surface, (150, 135))
+        ##### 350
+        atras1_button = Button(screen, 580, 165, 40, 40, "\ ", (0, 0, 0), 20) #300, 150
+        adelante1_button = Button(screen, 820, 165, 40, 40, " /", (0, 0, 0), 20) #650, 150
         adelante1_button.draw()
         atras1_button.draw()
-        atras2_button = Button(screen, 300, 290, 40, 40, "<", (255, 0, 0), 20)
-        adelante2_button = Button(screen, 650, 290, 40, 40, ">", (255, 0, 0), 20)
+        atras2_button = Button(screen, 580, 290, 40, 40, "\ ", (0, 0, 0), 20)
+        adelante2_button = Button(screen, 820, 290, 40, 40, " /", (0, 0, 0), 20)
         adelante2_button.draw()
         atras2_button.draw()
        #listica de errores
-        textE = font1.render("ERRORES", True, (255, 255, 255))
-        screen.blit(textE, (440, 90))
-        text_1 = font1.render(str(a1.data), True, (255, 255, 255))
-        screen.blit(text_1, (495, 135))
+        textE = font1.render("ERRORES", True, (0, 0, 0))
+        screen.blit(textE, (655, 110))  
+        text_1 = font1.render(str(a1.data), True, (0, 0, 0))
+        screen.blit(text_1, (710, 155)) #495
         if a1.prev == None:
-            text11 = font2.render("", True, (255, 255, 255))
-            screen.blit(text11, (475, 150))
+            text11 = font2.render("", True, (0, 0, 0))
+            screen.blit(text11, (690, 170)) #20
         else:
-            text11 = font2.render(str(a1.prev.data), True, (255, 255, 255))
-            screen.blit(text11, (475, 150))
+            text11 = font2.render(str(a1.prev.data), True, (0, 0, 0))
+            screen.blit(text11, (690, 170))
         if a1.next == None:
-            text21 = font2.render("", True, (255, 255, 255))
-            screen.blit(text21, (525, 150))
+            text21 = font2.render("", True, (0, 0, 0))
+            screen.blit(text21, (740, 170)) #30
         else:
-            text21 = font2.render(str(a1.next.data), True, (255, 255, 255))
-            screen.blit(text21, (525, 150))
+            text21 = font2.render(str(a1.next.data), True, (0, 0, 0))
+            screen.blit(text21, (740, 170))
 
         #listica de modulos
-        textM = font1.render("MODULOS", True, (255, 255, 255))
-        screen.blit(textM, (440, 230))
-        text_2 = font1.render(str(a2.data), True, (255, 255, 255))
-        screen.blit(text_2, (495, 280))
+        textM = font1.render("MODULOS", True, (0, 0, 0))
+        screen.blit(textM, (655, 235))
+        text_2 = font1.render(str(a2.data), True, (0, 0, 0))
+        screen.blit(text_2, (710, 280))
         if a2.prev == None:
-            text12 = font2.render("", True, (255, 255, 255))
-            screen.blit(text12, (475, 295))
+            text12 = font2.render("", True, (0, 0, 0))
+            screen.blit(text12, (690, 295))
         else:
-            text12 = font2.render(str(a2.prev.data), True, (255, 255, 255))
-            screen.blit(text12, (475, 295))
+            text12 = font2.render(str(a2.prev.data), True, (0, 0, 0))
+            screen.blit(text12, (690, 295))
         if a2.next == None:
-            text22 = font2.render("", True, (255, 255, 255))
-            screen.blit(text22, (525, 295))
+            text22 = font2.render("", True, (0, 0, 0))
+            screen.blit(text22, (740, 295))
         else:
-            text22 = font2.render(str(a2.next.data), True, (255, 255, 255))
-            screen.blit(text22, (525, 295))
+            text22 = font2.render(str(a2.next.data), True, (0, 0, 0))
+            screen.blit(text22, (740, 295))
     
         click = False
         for event in pygame.event.get():
@@ -241,7 +249,7 @@ def moverLista2(modo): #modo: False-Retroceso, True-Avance
             a2 = a2.prev
 
 def archivo():
-    nombre_archivo = 'Laboratorio-3-Estructura/src/files/BINARY BOMB SQUAD MANUAL borrador.pdf'
+    nombre_archivo = 'Laboratorio-3-Estructura/src/files/MANUAL DE DESACTIVACIÓN.pdf'
     ruta_proyecto = os.path.abspath(os.curdir)
 # Obtiene la ruta completa del archivo dentro de la carpeta del proyecto
     ruta_archivo = os.path.join(ruta_proyecto, nombre_archivo)
