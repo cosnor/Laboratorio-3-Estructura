@@ -140,12 +140,15 @@ class ModuloCablesBasicos(Modulo):
             if self.cables[0].color =="Rojo" and CableBasico.color == "Rojo":  
                 self.estado = True
                 print("Modulo desactivado")
+                self.bomba.modulo_desactivado()
             elif self.cables[1].color == "Azul" and CableBasico.color == self.cables[2].color:
                 self.estado = True
                 print("Modulo desactivado")
+                self.bomba.modulo_desactivado()
             elif CableBasico.color == self.cables[3].color:
                 self.estado = True
                 print("Modulo desactivado")
+                self.bomba.modulo_desactivado()
             else:             
                 print("Equivocación")
                 self.estado_equivocacion = True
@@ -155,12 +158,15 @@ class ModuloCablesBasicos(Modulo):
             if self.cables[3].color == "Blanco" and CableBasico.color == "Blanco":
                 self.estado = True
                 print("Modulo desactivado")
+                self.bomba.modulo_desactivado()
             elif self.cables[2].color == "Azul" and CableBasico.color == self.cables.color[1]:
                 self.estado = True
                 print("Modulo desactivado")
+                self.bomba.modulo_desactivado()
             elif CableBasico.color == self.cables[2].color:
                 self.estado = True
                 print("Modulo desactivado")
+                self.bomba.modulo_desactivado()
             else: 
                 print("Equivocación")
                 self.estado_equivocacion = True
@@ -170,12 +176,15 @@ class ModuloCablesBasicos(Modulo):
             if self.cables[1].color == "Negro" and CableBasico.color == "Negro":
                 self.estado = True
                 print("Modulo desactivado")
+                self.bomba.modulo_desactivado()
             elif self.cables[3].color == "Negro" and CableBasico.color == "Negro":
                 self.estado = True
                 print("Modulo desactivado")
+                self.bomba.modulo_desactivado()
             elif CableBasico.color == self.cables[0].color: 
                 self.estado = True
                 print("Modulo desactivado")
+                self.bomba.modulo_desactivado()
             else: 
                 print("Equivocación")
                 self.estado_equivocacion = True
@@ -185,6 +194,7 @@ class ModuloCablesBasicos(Modulo):
             if CableBasico[1].color == self.cables[2].color: 
                 self.estado = True
                 print("Modulo desactivado")
+                self.bomba.modulo_desactivado()
             else: 
                 print("Equivocación")
                 self.estado_equivocacion = True
@@ -268,6 +278,7 @@ class ModuloCablesComplejos(Modulo):
         if self.estado: 
             led_verde = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_verde_modulo.png")
             pantalla.blit(led_verde, (0, 0))
+            self.bomba.modulo_desactivado()
         elif self.estado_equivocacion: 
             led_rojo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_rojo_modulo.png")
             pantalla.blit(led_rojo, (0, 0))

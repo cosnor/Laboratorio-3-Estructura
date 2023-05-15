@@ -18,8 +18,26 @@ class Bomba():
         self.franja = None
     
     def notificar_equivocacion(self): 
-         self.equivocaciones += 1
-         
+        self.equivocaciones += 1
+        self.validar_bomba()
+
+    def modulo_desactivado(self):
+        self.modulos_restantes -= 1
+        self.validar_bomba()
+
+    def validar_bomba(self): 
+        if self.equivocaciones > self.errores: 
+            self.derrota()
+        elif self.modulos_restantes == 0:
+            self.victoria()
+        #
+
+    def victoria(self): 
+         pass
+    
+    def derrota(self): 
+         print("La bomba explotó")
+
     def tiempo_agotado(self): 
         if self.tiempo == 0: 
             self.estado = "Detonada"  

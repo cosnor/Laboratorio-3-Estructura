@@ -334,12 +334,12 @@ def game():
                 if event.button == 1:
                     click = True
 
-        #screen.blit(background, (0,0))
+        screen.blit(background, (0,0))
         screen.blit(frame, (165,56))
         screen.blit(module1, (180,71))
         screen.blit(module2, (402,71))
         screen.blit(module3, (625,71))
-        screen.blit(module4, (180,293))
+        screen.blit(module4, (r180,293))
         screen.blit(module5, (402,293))
         screen.blit(timer, (625,293))
         
@@ -348,6 +348,7 @@ def game():
         elapsed_time = current_time - start_time
         remaining_time = max(duration - elapsed_time, 0)
         bombita.tiempo_agotado()
+        
         # Formatear el tiempo restante en formato mm:ss
         minutes = int(remaining_time // 60)
         seconds = int(remaining_time % 60)
