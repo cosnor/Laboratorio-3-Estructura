@@ -19,8 +19,9 @@ clock = pygame.time.Clock()
 
 BLACK = pygame.Color("#0a100d")
 ORANGE = pygame.Color("#f34213")
-GREEN = pygame.Color('#588157')
+GREEN = pygame.Color('#1d3334')
 GOLD = pygame.Color('#fcbf49')
+RED = pygame.Color('#bf3b3b')
 VANILLA = pygame.Color('#e9eb9e')
 WHITE = pygame.Color("#ffffff")
 GOLDEN = pygame.Color('#fcbf49')
@@ -286,22 +287,26 @@ def creditos():
     ]
     start_time = time.time()
     duration = 10
+    fondo_credito = pygame.image.load("Laboratorio-3-Estructura/src/graphics/creditos/creditsbg.png")
+    fondo_credito_o = pygame.image.load("Laboratorio-3-Estructura/src/graphics/creditos/creditsbgo.png")
+    fondo_credito_oo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/creditos/creditsbgoo.png")
     fuente_titulo = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 36)
-    fuente_creditos = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 24)
-
+    fuente_creditos = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 14)
     posicionbajada = 0
     while True:
-        screen.fill(SILVER)
+        screen.blit(fondo_credito, (0,0))
         posicion_y = 15
         # Dibuja cada línea de crédito
         for linea in creditos_movibles:
             credito_superficie = fuente_creditos.render(linea, True, (BLACK))
-            credito_rect = credito_superficie.get_rect(center=(1000 // 2, posicion_y-posicionbajada))
+            credito_rect = credito_superficie.get_rect(center=(750, posicion_y-posicionbajada))
             screen.blit(credito_superficie, credito_rect)
+            screen.blit(fondo_credito_o, (0,0))
+            screen.blit(fondo_credito_oo, (0,0))
             posicion_y += 40
         # Actualiza la pantalla
         current_time = time.time()
-        print(current_time - start_time)
+
         if current_time - start_time >= 0.5:
             posicionbajada += 40 # Incrementar la posición vertical
             start_time = current_time  # Reiniciar el tiempo de inicio
