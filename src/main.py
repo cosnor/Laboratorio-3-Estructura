@@ -317,11 +317,13 @@ def creditos():
 
 def game():
     # Duración del temporizador en segundos
-    duration = 300
-
+    duration = 10
+    remaining_time = duration
     # Obtener el tiempo de inicio
     start_time = time.time()
-    
+    control = [False]
+    c=0
+
     global a1 #errores
     global a2 #modulos
     running = True
@@ -404,7 +406,7 @@ def game():
                     posexigente = (180,293)
                 elif pos[x] == module5:
                     posexigente = (402,293)
-                modulo.dibujarElementos(pos[x], posexigente)
+                modulo.dibujarElementos(pos[x],remaining_time,control, posexigente)
             if x < a2.data -1:
                 x= x+1
 
@@ -436,7 +438,9 @@ def game():
         bombita.tiempo_agotado()
         bombita.equivocaciones_limite()
         if bombita.estado == "Detonada":
-            exit()
+            terminarM(False, str(a2.data), time_text, str(bombita.equivocaciones), str(a1.data))
+        if bombita.estado == "Desactivada":
+            terminarM(True, str(a2.data), time_text, str(bombita.equivocaciones), str(a1.data))
         # Formatear el tiempo restante en formato mm:ss
         minutes = int(remaining_time // 60)
         seconds = int(remaining_time % 60)
@@ -487,9 +491,91 @@ def game():
                 text_surface = fontE.render("XXX", True, WHITE)
                 text_rect = text_surface.get_rect(center=(102,157))
                 timer.blit(text_surface, text_rect)
-
-        
         pygame.display.update()
         clock.tick(60)
 
+def terminarM(desactivada, modulos, tiemporestante, errores, intentos):
+        resultbg = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Resultado/book.png")
+        defusedstp = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Resultado/desactivada.png")
+        explodedstp = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Resultado/detonada.png")
+        font = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 10)
+        fontbold = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 10)
+        pygame.font.Font.set_bold(fontbold, True)
+        bfont = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 12)
+
+        # Variables para la pantalla de resultado
+        #desactivada = True
+        tiempo = "5:00"
+        #modulos = "5"
+        #intentos = "3"
+        #tiemporestante = "1:50"
+        #errores = "1"
+
+        # Botones para la pantalla de resultado
+        backbutton = pygame.Rect(595,370,95,40)
+        retrybutton = pygame.Rect(720,370,135,40)
+
+        continuebutton = pygame.Rect(650,370,120,40)
+
+        # Texto para la pantalla de resultado
+        bombconfigtxt = fontbold.render("AJUSTES DE LA BOMBA", True, 'black')
+        timeconfigtxt = font.render(tiempo, True, 'black')
+        moduleconfigtxt = font.render(modulos + " MÓDULOS", True, 'black')
+        strikeconfigtxt = font.render(intentos + " INTENTOS", True, 'black')
+        timetitletxt = fontbold.render("TIEMPO RESTANTE:", True, 'black')
+        remtimetxt = font.render(tiemporestante, True, 'black')
+        errorstitletxt = fontbold.render("ERRORES:", True, 'black')
+        errorstxt = font.render(errores, True, 'black')
+
+        menutxt = bfont.render("VOLVER", True, 'white')
+        retrytxt = bfont.render("REINTENTAR", True, 'white')
+
+        continuetxt = bfont.render("CONTINUAR", True, 'white')
+
+
+        running = True
+
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if desactivada == True:
+                        if continuebutton.collidepoint(event.pos):
+                            # Aquí se debe volver al menú principal
+                            new_menu()
+                    else:
+                        if backbutton.collidepoint(event.pos):
+                            # Aquí se debe volver al menú principal
+                            new_menu()
+                        if retrybutton.collidepoint(event.pos):
+                            # Aquí se debe volver a jugar
+                            opcJugar()
+
+            screen.fill((50,50,50))
+
+            screen.blit(resultbg, (0,0))
+
+            if desactivada == True:
+                screen.blit(defusedstp, (0,0))
+                pygame.draw.rect(screen, 0, continuebutton)
+                screen.blit(continuetxt, (continuebutton.x + 10, continuebutton.y))
+            else:
+                screen.blit(explodedstp, (0,0))
+                pygame.draw.rect(screen, 0, backbutton)
+                pygame.draw.rect(screen, 0, retrybutton)
+                screen.blit(menutxt, (backbutton.x + 10, backbutton.y))
+                screen.blit(retrytxt, (retrybutton.x + 10, retrybutton.y))
+            
+            screen.blit(bombconfigtxt, (625, 100))
+            screen.blit(timeconfigtxt, (580, 140))
+            screen.blit(moduleconfigtxt, (655, 140))
+            screen.blit(strikeconfigtxt, (770, 140))
+            screen.blit(timetitletxt, (645, 235))
+            screen.blit(remtimetxt, (700, 255))
+            screen.blit(errorstitletxt, (680, 285))
+            screen.blit(errorstxt, (710, 305))
+            
+            clock.tick(60)
+            pygame.display.update()
 new_menu()

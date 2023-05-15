@@ -803,15 +803,36 @@ class ModuloExigente(Modulo):
         self.tiempo_intermedio = 45
         self.hilo_temporizador = None
         self.hilo_reposo = None
+        self.tiempo_inicio_original = time.time()
     
     def dibujarFondo(self, pantalla):
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_exigente.png")
         pantalla.blit(fondo, (0, 0))
 
-    def dibujarElementos(self, pantalla, posicionreal = None):
+    def dibujarElementos(self, pantalla, tiempo_transcurrido,control, posicionreal=None):
         botonE1 = ButtonM(pantalla,28,123,70,47,"1",(0,0,0,0))
         botonE2 = ButtonM(pantalla,103,123,70,47,"2",(0,0,0,0))
         #rect <rect(245, 194, 35, 47)>
+        tiempo_transcurrido = int(tiempo_transcurrido)
+        tiempo_inicio_exigente = self.tiempo_inicio_original
+        if tiempo_transcurrido > 0:
+            if tiempo_transcurrido % 65 == 0 or control[0] == True:
+                duration_exigente = 20
+                tiempo_actual = time.time()
+                tiempo_transcurrido_exigente = tiempo_actual - tiempo_inicio_exigente
+                remaining_time = max(duration_exigente - tiempo_transcurrido_exigente, 0)
+                remaining_time = int(remaining_time % 60)
+                fuente = pygame.font.Font(None, 30)
+                texto = fuente.render(f"{remaining_time:02d}", 1, (255, 255, 255))
+                pantalla.blit(texto, (89, 28))
+                control[0] = True
+                if remaining_time == 0:
+                    control[0] = False
+                    self.tiempo_inicio_original = time.time()
+            else:
+                fuente = pygame.font.Font(None, 30)
+                texto = fuente.render(f"00", 1, (255, 255, 255))
+                pantalla.blit(texto, (89, 28))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -835,7 +856,7 @@ class ModuloExigente(Modulo):
         indice_elegido = randint(0, len(self.enunciados)-1)
         self.enunciado = self.enunciados[indice_elegido]
         print(self.enunciado)
-
+ 
     #!Revisar la desactivación
     def desactivar(self):
         self.estado=False
