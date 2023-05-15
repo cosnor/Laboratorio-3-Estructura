@@ -829,10 +829,8 @@ class ModuloExigente(Modulo):
                 duration_exigente = 20
                 tiempo_actual = time.time()
                 tiempo_transcurrido_exigente = tiempo_actual - tiempo_inicio_exigente
-                print(tiempo_transcurrido_exigente)
                 remaining_time = max(duration_exigente - tiempo_transcurrido_exigente, 0)
                 remaining_time = int(remaining_time % 60)
-                print(remaining_time)
                 fuente = pygame.font.Font(None, 30)
                 texto = fuente.render(f"{remaining_time:02d}", 1, (255, 255, 255))
                 pantalla.blit(texto, (89, 28))
