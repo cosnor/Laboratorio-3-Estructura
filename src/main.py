@@ -24,6 +24,7 @@ VANILLA = pygame.Color('#e9eb9e')
 WHITE = pygame.Color("#ffffff")
 GOLDEN = pygame.Color('#fcbf49')
 SILVER = pygame.Color('#dbd4d3')
+VINOTINTO = pygame.Color('#9b1d20')
 font = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 20)
 font1 = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 40)
 
