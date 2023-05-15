@@ -317,7 +317,7 @@ def creditos():
 
 def game():
     # Duración del temporizador en segundos
-    duration = 10
+    duration = 300
     remaining_time = duration
     # Obtener el tiempo de inicio
     start_time = time.time()
