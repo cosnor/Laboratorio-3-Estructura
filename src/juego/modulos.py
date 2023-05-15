@@ -798,12 +798,13 @@ class ModuloExigente(Modulo):
             "Las listas doblemente enlazadas no permiten eliminar nodos de la lista",
             "Una pila permite eliminar elementos en cualquier posición de la pila"]
         self.enunciado = None
-        self.opciones = ["S", "N"]
+        self.opciones = ["SI", "N0"]
         self.tiempo_restante = 20
         self.tiempo_intermedio = 45
         self.hilo_temporizador = None
         self.hilo_reposo = None
         self.tiempo_inicio_original = time.time()
+        self.font = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 24)
     
     def dibujarFondo(self, pantalla):
         fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_exigente.png")
@@ -812,6 +813,10 @@ class ModuloExigente(Modulo):
     def dibujarElementos(self, pantalla, tiempo_transcurrido,control, posicionreal=None):
         botonE1 = ButtonM(pantalla,28,123,70,47,"1",(0,0,0,0))
         botonE2 = ButtonM(pantalla,103,123,70,47,"2",(0,0,0,0))
+        Si = self.font.render(self.opciones[0], True, (0,0,0))
+        No = self.font.render(self.opciones[1], True, (0,0,0))
+        pantalla.blit(Si, (49,109))
+        pantalla.blit(No, (116,109))
         #rect <rect(245, 194, 35, 47)>
         tiempo_transcurrido = int(tiempo_transcurrido)
         tiempo_inicio_exigente = self.tiempo_inicio_original
