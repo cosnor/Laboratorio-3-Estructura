@@ -40,6 +40,7 @@ class ButtonJ:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 funcion()
+            pygame.time.wait(10)
                 
                 
 class ButtonM:
@@ -55,14 +56,10 @@ class ButtonM:
         text_surface = self.font.render(self.text, True, (255, 255, 255))
         text_rect = text_surface.get_rect(center=self.rect.center)
         self.screen.blit(text_surface, text_rect)
-
-    def handle_event(self, event, funcion):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos):
-                funcion()
                 
     def handle_event1(self, event, posicionreal, funcion):
         if event.type == pygame.MOUSEBUTTONDOWN:
             rect_cambio = pygame.Rect(self.rect.x + posicionreal[0], self.rect.y + posicionreal[1], self.rect.width, self.rect.height)
             if rect_cambio.collidepoint(event.pos):
                 funcion()
+            pygame.time.wait(10)

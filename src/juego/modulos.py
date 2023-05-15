@@ -69,16 +69,6 @@ class ModuloCablesBasicos(Modulo):
             led_rojo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_rojo_modulo.png")
             pantalla.blit(led_rojo, (0, 0))
     
-    def handle_event(self, event, pantalla):
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for cable in self.cables: 
-                    diferencia = (event.pos[0]-90 - pantalla[0], event.pos[1]-64 - pantalla[1])
-                    
-                    if cable.rect.collidepoint(diferencia):
-                        self.cortar_cable(cable)
             
     def agregar_cables(self):
         #Asignación aleatoria del orden de los cables
@@ -128,7 +118,7 @@ class ModuloCablesBasicos(Modulo):
         
     def cortar_cable(self, CableBasico: object): 
         #Validación que modulo esté sin desactivar
-        if self.estado == False: 
+        if self.estado == False and CableBasico.estado == False: 
             CableBasico.set_estado_cortado()
             self.validacion(CableBasico)
         else: 
@@ -182,7 +172,7 @@ class ModuloCablesBasicos(Modulo):
                 self.bomba.notificar_equivocacion()  
 
         if self.franja == "blanca": 
-            if CableBasico[1].color == self.cables[2].color: 
+            if CableBasico.color == self.cables[2].color: 
                 self.estado = True
                 print("Modulo desactivado")
             else: 
@@ -313,8 +303,9 @@ class ModuloCablesComplejos(Modulo):
 
     #Función para cortar un cable
     def cortar_cable(self, CableComplejo: object): 
-        CableComplejo.set_estado_cortado()
-        self.validacion_cable(CableComplejo)
+        if CableComplejo.estado == False:
+            CableComplejo.set_estado_cortado()
+            self.validacion_cable(CableComplejo)
     
     #Se valida al cortar un cable
     def validacion_cable(self, CableComplejo):
