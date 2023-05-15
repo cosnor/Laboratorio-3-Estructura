@@ -24,6 +24,10 @@ class Bomba():
         if self.tiempo == 0: 
             self.estado = "Detonada"  
     
+    def equivocaciones_limite(self):
+        if self.equivocaciones > self.errores:
+            self.estado = "Detonada"
+
     def victoria(self): 
         if self.estado: 
             if self.modulos_restantes == 0: 
@@ -35,7 +39,10 @@ class Bomba():
         timer.blit(fran, (0,0))
 
     def asignar_modulos(self): 
-        LISTA_MODULOS = ["Cables simples", "Cables complejos", "Memoria", "Código", "Exigente"]
+        if self.numero_modulos == 3:
+            LISTA_MODULOS = ["Cables simples", "Cables complejos", "Código"]
+        else:
+             LISTA_MODULOS = ["Cables simples", "Cables complejos", "Memoria", "Código", "Exigente"]
         LISTA_MODULOS_SELECCIONADOS = []
         POSICIONES = [1, 2, 3, 4, 5]
         POSICIONESSELEC = []
@@ -93,8 +100,3 @@ class Bomba():
                         nuevo_modulo = ModuloExigente(self, 2)
                         self.modulos.append(nuevo_modulo)
                         posicion = i
-
-
-
-
-                
