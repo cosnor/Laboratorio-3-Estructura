@@ -42,6 +42,10 @@ class Bomba():
         if self.tiempo == 0: 
             self.estado = "Detonada"  
     
+    def equivocaciones_limite(self):
+        if self.equivocaciones > self.errores:
+            self.estado = "Detonada"
+
     def victoria(self): 
         if self.estado: 
             if self.modulos_restantes == 0: 
@@ -111,8 +115,3 @@ class Bomba():
                         nuevo_modulo = ModuloExigente(self, 2)
                         self.modulos.append(nuevo_modulo)
                         posicion = i
-
-
-
-
-                
