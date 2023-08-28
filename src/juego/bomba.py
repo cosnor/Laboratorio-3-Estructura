@@ -18,8 +18,8 @@ class Bomba():
         self.franja = None
     
     def notificar_equivocacion(self): 
-         self.equivocaciones += 1
-         
+        self.equivocaciones += 1
+        
     def tiempo_agotado(self): 
         if self.tiempo == 0: 
             self.estado = "Detonada"  
@@ -34,7 +34,7 @@ class Bomba():
                 self.estado = "Desactivada"
 
     def colocarFranja(self, timer):
-        franhint = f"Laboratorio-3-Estructura/src/graphics/Modulo Timer/franja_{self.franja}.png"
+        franhint = f"src/graphics/Modulo Timer/franja_{self.franja}.png"
         fran = pygame.image.load(franhint)
         timer.blit(fran, (0,0))
 
@@ -42,7 +42,7 @@ class Bomba():
         if self.numero_modulos == 3:
             LISTA_MODULOS = ["Cables simples", "Cables complejos", "Código"]
         else:
-             LISTA_MODULOS = ["Cables simples", "Cables complejos", "Memoria", "Código", "Exigente"]
+            LISTA_MODULOS = ["Cables simples", "Cables complejos", "Memoria", "Código", "Exigente"]
         LISTA_MODULOS_SELECCIONADOS = []
         POSICIONES = [1, 2, 3, 4, 5]
         POSICIONESSELEC = []

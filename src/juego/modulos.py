@@ -9,6 +9,7 @@ import pygame
 from juego.button import *
 from juego.bomba import *
 
+
 class Modulo:
     def __init__(self, Bomba, pos) -> None:
         self.estado= False #False indica que no ha sido resuelto
@@ -28,48 +29,27 @@ class ModuloCablesBasicos(Modulo):
         self.C2 = None
         self.C3 = None
         self.C4 = None
+        self.rect_abs = None
+        self.modulo = None
 
     def dibujarFondo(self, pantalla):
-        fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_cables_simples.png")
+        fondo = pygame.image.load("src/graphics/Fondos/fondo_cables_simples.png")
         pantalla.blit(fondo, (0, 0))
     
     def dibujarElementos(self, pantalla, pantalla1, pantalla2): 
-        x=0
 
-        self.C1 = ButtonJ(pantalla1, pantalla2, 35, 60, 120, 20, "xd", (0,0,0), 2)
-        self.C2 = ButtonJ(pantalla1, pantalla2, 35, 85, 120, 20, "xd", (0,0,0), 2)
-        self.C3 = ButtonJ(pantalla1, pantalla2, 35, 118, 120, 20, "xd", (0,0,0), 2)
-        self.C4 = ButtonJ(pantalla1, pantalla2, 35, 145, 120, 20, "xd", (0,0,0), 2)
-        
-     
-        for cable in self.cables: 
-            if cable.estado == False:
-                pantalla.blit(cable.icono_cable, self.rect[x])
-            else:
-                pantalla.blit(cable.icono_cable_cortado, self.rect[x])
-            if x < len(self.rect) -1:
-                x= x+1
-        for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        exit()
-                self.C1.handle_event(event, lambda: self.cortar_cable(self.cables[0]))
-                self.C2.handle_event(event, lambda: self.cortar_cable(self.cables[1]))
-                self.C3.handle_event(event, lambda: self.cortar_cable(self.cables[2]))
-                self.C4.handle_event(event, lambda: self.cortar_cable(self.cables[3]))
-        
+        self.C1 = ButtonC(pantalla1, pantalla2, 35, 60, self.cables[0], self, 120, 20)
+        self.C2 = ButtonC(pantalla1, pantalla2, 35, 85, self.cables[1], self, 120, 20)
+        self.C3 = ButtonC(pantalla1, pantalla2, 35, 118, self.cables[2], self, 120, 20)
+        self.C4 = ButtonC(pantalla1, pantalla2, 35, 145, self.cables[3], self, 120, 20)
+
         if self.estado: 
-            led_verde = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_verde_modulo.png")
+            led_verde = pygame.image.load("src/graphics/LED_MODULOS/LED_verde_modulo.png")
             pantalla.blit(led_verde, (0, 0))
         elif self.estado_equivocacion: 
-            led_rojo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_rojo_modulo.png")
+            led_rojo = pygame.image.load("src/graphics/LED_MODULOS/LED_rojo_modulo.png")
             pantalla.blit(led_rojo, (0, 0))
     
-            
     def agregar_cables(self):
         #Asignación aleatoria del orden de los cables
         LISTA_COLORES = ["Rojo", "Azul", "Negro", "Blanco"]
@@ -121,8 +101,7 @@ class ModuloCablesBasicos(Modulo):
         if self.estado == False and CableBasico.estado == False: 
             CableBasico.set_estado_cortado()
             self.validacion(CableBasico)
-        else: 
-            print ("El modulo ya está desactivado")
+        
 
     def validacion(self, CableBasico):
         #Comprobación de que el cable cortado sea el correcto luego de  presionar enviar o cortar un cable
@@ -149,7 +128,7 @@ class ModuloCablesBasicos(Modulo):
                 self.estado = True
                 print("Modulo desactivado")
                 self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
-            elif self.cables[2].color == "Azul" and CableBasico.color == self.cables.color[1]:
+            elif self.cables[2].color == "Azul" and CableBasico.color == self.cables[1].color:
                 self.estado = True
                 print("Modulo desactivado")
                 self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
@@ -181,7 +160,7 @@ class ModuloCablesBasicos(Modulo):
                 self.Bomba.notificar_equivocacion()  
 
         if self.franja == "blanca": 
-            if CableBasico.color == self.cables[2].color: 
+            if CableBasico.color == self.cables[1].color: 
                 self.estado = True
                 print("Modulo desactivado")
                 self.Bomba.modulos_restantes = self.Bomba.modulos_restantes - 1
@@ -201,53 +180,31 @@ class ModuloCablesComplejos(Modulo):
         self.C2 = None
         self.C3 = None
         self.C4 = None
+        self.rect_abs = None
     
     def dibujarFondo(self, pantalla):
-        fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_cables_complejos.png")
+        fondo = pygame.image.load("src/graphics/Fondos/fondo_cables_complejos.png")
         pantalla.blit(fondo, (0, 0))
     
     def dibujarElementos(self, pantalla, pantalla1, pantalla2):
         
-        self.C1 = ButtonJ(pantalla1, pantalla2, 34, 70, 10, 100, "xd", (0,0,0), 2)
-        self.C2 = ButtonJ(pantalla1, pantalla2, 56, 70, 10, 100, "xd", (0,0,0), 2)
-        self.C3 = ButtonJ(pantalla1, pantalla2, 80, 70, 10, 100, "xd", (0,0,0), 2)
-        self.C4 = ButtonJ(pantalla1, pantalla2, 104, 70, 10, 100, "xd", (0,0,0), 2)
+        self.C1 = ButtonC(pantalla1, pantalla2, 34, 70, self.cables[0], self, 20, 120)
+        self.C2 = ButtonC(pantalla1, pantalla2, 56, 70, self.cables[1], self, 20, 120)
+        self.C3 = ButtonC(pantalla1, pantalla2, 80, 70, self.cables[2], self, 20, 120)
+        self.C4 = ButtonC(pantalla1, pantalla2, 104, 70, self.cables[3], self, 20, 120)
+        
         self.ok = ButtonJ(pantalla1, pantalla2, 139, 98, 40, 40, "xd", (0,0,0), 2)
         for i, cable in enumerate(self.cables): 
             if i == 0: 
-                #self.rect.append(pygame.Rect(0, 0, 10, 10))
-                #self.C1 = ButtonJ(pantalla1, pantalla2, 0, 0, 20, 5, "xd", (0,0,0), 2)
-                if cable.estado == False:
-                    pantalla.blit(cable.icono, (0,0))
-                else:
-                    pantalla.blit(cable.icono_cortado, (0, 0))
                 pantalla.blit(cable.icono_led, (0,0))
                 pantalla.blit(cable.icono_letra, (0,0))
             elif i == 1: 
-                #self.rect.append(pygame.Rect(22, 0, 10, 10))
-                #self.C2 = ButtonJ(pantalla1, pantalla2, 22, 0, 20, 5, "xd", (0,0,0), 2)
-                if cable.estado == False:
-                    pantalla.blit(cable.icono, (22,0))
-                else:
-                    pantalla.blit(cable.icono_cortado, (22, 0))
                 pantalla.blit(cable.icono_led, (22,0))
                 pantalla.blit(cable.icono_letra, (22,0))
             elif i == 2: 
-                #self.rect.append(pygame.Rect(46, 0, 10, 10))
-                #self.C3 = ButtonJ(pantalla1, pantalla2, 46, 0, 20, 5, "xd", (0,0,0), 2)
-                if cable.estado == False:
-                    pantalla.blit(cable.icono, (46,0))
-                else:
-                    pantalla.blit(cable.icono_cortado, (46, 0))
                 pantalla.blit(cable.icono_led, (46,0))
                 pantalla.blit(cable.icono_letra, (46,0))
             elif i == 3: 
-                #self.rect.append(pygame.Rect(70, 0, 10, 10))
-                #self.C4 = ButtonJ(pantalla1, pantalla2, 70, 0, 20, 5, "xd", (0,0,0), 2)
-                if cable.estado == False:
-                    pantalla.blit(cable.icono, (70,0))
-                else:
-                    pantalla.blit(cable.icono_cortado, (70, 0))
                 pantalla.blit(cable.icono_led, (70,0))
                 pantalla.blit(cable.icono_letra, (70,0))
             
@@ -259,29 +216,23 @@ class ModuloCablesComplejos(Modulo):
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         exit()
-                self.C1.handle_event(event, lambda: self.cortar_cable(self.cables[0]))
-                self.C2.handle_event(event, lambda: self.cortar_cable(self.cables[1]))
-                self.C3.handle_event(event, lambda: self.cortar_cable(self.cables[2]))
-                self.C4.handle_event(event, lambda: self.cortar_cable(self.cables[3]))
-                self.ok.handle_event(event, lambda: self.validacion_final())
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if event.type == pygame.MOUSEBUTTONDOWN and (mouse_x > self.rect_abs[0] and mouse_x < self.rect_abs[0] + self.rect_abs[2]) and (mouse_y > self.rect_abs[1] and mouse_y < self.rect_abs[1] + self.rect_abs[3]):
+
+                    self.ok.handle_event(event, lambda: self.validacion_final())
     
         if self.estado: 
-            led_verde = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_verde_modulo.png")
+            led_verde = pygame.image.load("src/graphics/LED_MODULOS/LED_verde_modulo.png")
             pantalla.blit(led_verde, (0, 0))
         elif self.estado_equivocacion: 
-            led_rojo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_rojo_modulo.png")
+            led_rojo = pygame.image.load("src/graphics/LED_MODULOS/LED_rojo_modulo.png")
             pantalla.blit(led_rojo, (0, 0))
     
     def handle_event(self, event, pantalla):
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for cable in self.cables: 
-                    diferencia = (event.pos[0]-35 - pantalla[0], event.pos[1]-110 - pantalla[1])
-                    print(diferencia)
-                    if cable.rect.collidepoint(diferencia):
-                        self.cortar_cable(cable)
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        
             
     #Asignación de cables
     def agregar_cables(self):
@@ -368,7 +319,7 @@ class ModuloCablesComplejos(Modulo):
                         return "Equivocación"
                         
                     else: 
-                       print("Cable no cortado correcto")
+                        print("Cable no cortado correcto")
                 elif cable.conectado_a == "B":
                     if cable.color== "Naranja y Morado" and cable.LED == False:
                         self.estado_equivocacion = True
@@ -407,11 +358,12 @@ class ModuloPalabras(Modulo):  #Caso memoria
         self.seleccion2 = None
         self.seleccion3 = None
         self.seleccion4 = None
-        self.font= pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 10)
+        self.font= pygame.font.Font("src/font/Pixeled.ttf", 10)
         self.estado_equivocacion = False
+        self.rect_abs = None
 
     def dibujarFondo(self, pantalla):
-        fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_memoria.png")
+        fondo = pygame.image.load("src/graphics/Fondos/fondo_memoria.png")
         pantalla.blit(fondo, (0, 0))
     
     def dibujarElementos(self, pantalla, posicionreal = None):
@@ -422,10 +374,10 @@ class ModuloPalabras(Modulo):  #Caso memoria
         pantalla.blit(frase1, (30,55))
         pantalla.blit(frase2, (30,75))
         if self.estado: 
-            led_verde = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_verde_modulo.png")
+            led_verde = pygame.image.load("src/graphics/LED_MODULOS/LED_verde_modulo.png")
             pantalla.blit(led_verde, (0, 0))
         elif self.estado_equivocacion: 
-            led_rojo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_rojo_modulo.png")
+            led_rojo = pygame.image.load("src/graphics/LED_MODULOS/LED_rojo_modulo.png")
             pantalla.blit(led_rojo, (0, 0))
         boton1 = ButtonM(pantalla,30,123,32,47,"1",(0,0,0,0))
         boton2 = ButtonM(pantalla,65,123,35,47,"2",(0,0,0,0))
@@ -439,11 +391,13 @@ class ModuloPalabras(Modulo):  #Caso memoria
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-            boton1.handle_event1(event, posicionreal, lambda: print("hola"))
-            boton2.handle_event1(event, posicionreal, lambda: print("como"))
-            boton3.handle_event1(event, posicionreal, lambda: print("estas"))
-            boton4.handle_event1(event, posicionreal, lambda: print("tu"))
-            barra.handle_event1(event, posicionreal, lambda: print("?"))
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEBUTTONDOWN and (mouse_x > self.rect_abs[0] and mouse_x < self.rect_abs[0] + self.rect_abs[2]) and (mouse_y > self.rect_abs[1] and mouse_y < self.rect_abs[1] + self.rect_abs[3]):
+                boton1.handle_event1(event, posicionreal, lambda: print("hola"))
+                boton2.handle_event1(event, posicionreal, lambda: print("como"))
+                boton3.handle_event1(event, posicionreal, lambda: print("estas"))
+                boton4.handle_event1(event, posicionreal, lambda: print("tu"))
+                barra.handle_event1(event, posicionreal, lambda: print("?"))
 
     def agregar_lista(self): 
         shuffle(self.opciones)
@@ -595,10 +549,11 @@ class ModuloCodigo(Modulo):
         self.posicion4 = []
         self.posicion5 = []
         self.estado_equivocacion = False
-        self.font = pygame.font.Font("Laboratorio-3-Estructura/src/font/Pixeled.ttf", 12)
+        self.font = pygame.font.Font("src/font/Pixeled.ttf", 12)
+        self.rect_abs = None
 
     def dibujarFondo(self, pantalla):
-        fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_codigo.png")
+        fondo = pygame.image.load("src/graphics/Fondos/fondo_codigo.png")
         pantalla.blit(fondo, (0, 0))
     
     def dibujarElementos(self, pantalla, pantalla1, pantalla2): 
@@ -633,6 +588,7 @@ class ModuloCodigo(Modulo):
         button3D.draw()
         button4D.draw()
         button5D.draw()
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -641,23 +597,26 @@ class ModuloCodigo(Modulo):
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     exit()
-            button1U.handle_event(event, lambda: self.anterior_posicion(1))
-            button2U.handle_event(event, lambda: self.anterior_posicion(2))
-            button3U.handle_event(event, lambda: self.anterior_posicion(3))
-            button4U.handle_event(event, lambda: self.anterior_posicion(4))
-            button5U.handle_event(event, lambda: self.anterior_posicion(5))
-            button1D.handle_event(event, lambda: self.siguiente_posicion(1))
-            button2D.handle_event(event, lambda: self.siguiente_posicion(2))
-            button3D.handle_event(event, lambda: self.siguiente_posicion(3))
-            button4D.handle_event(event, lambda: self.siguiente_posicion(4))
-            button5D.handle_event(event, lambda: self.siguiente_posicion(5))
-            buttonOk.handle_event(event, lambda: self.validar())
+                    
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEBUTTONDOWN and (mouse_x > self.rect_abs[0] and mouse_x < self.rect_abs[0] + self.rect_abs[2]) and (mouse_y > self.rect_abs[1] and mouse_y < self.rect_abs[1] + self.rect_abs[3]):
+                button1U.handle_event(event, lambda: self.anterior_posicion(1))
+                button2U.handle_event(event, lambda: self.anterior_posicion(2))
+                button3U.handle_event(event, lambda: self.anterior_posicion(3))
+                button4U.handle_event(event, lambda: self.anterior_posicion(4))
+                button5U.handle_event(event, lambda: self.anterior_posicion(5))
+                button1D.handle_event(event, lambda: self.siguiente_posicion(1))
+                button2D.handle_event(event, lambda: self.siguiente_posicion(2))
+                button3D.handle_event(event, lambda: self.siguiente_posicion(3))
+                button4D.handle_event(event, lambda: self.siguiente_posicion(4))
+                button5D.handle_event(event, lambda: self.siguiente_posicion(5))
+                buttonOk.handle_event(event, lambda: self.validar())
 
         if self.estado: 
-            led_verde = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_verde_modulo.png")
+            led_verde = pygame.image.load("src/graphics/LED_MODULOS/LED_verde_modulo.png")
             pantalla.blit(led_verde, (0, 0))
         elif self.estado_equivocacion: 
-            led_rojo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/LED_MODULOS/LED_rojo_modulo.png")
+            led_rojo = pygame.image.load("src/graphics/LED_MODULOS/LED_rojo_modulo.png")
             pantalla.blit(led_rojo, (0, 0))
 
     def not_in_lista(self, letra, lista): 
@@ -815,9 +774,10 @@ class ModuloExigente(Modulo):
         self.hilo_temporizador = None
         self.hilo_reposo = None
         self.tiempo_inicio_original = time.time()
+        self.rect_abs = None
     
     def dibujarFondo(self, pantalla):
-        fondo = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Fondos/fondo_exigente.png")
+        fondo = pygame.image.load("src/graphics/Fondos/fondo_exigente.png")
         pantalla.blit(fondo, (0, 0))
 
     def dibujarElementos(self, pantalla, tiempo_transcurrido,control, posicionreal=None):
@@ -851,8 +811,10 @@ class ModuloExigente(Modulo):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-            botonE1.handle_event1(event, posicionreal, lambda: print("pro"))
-            botonE2.handle_event1(event, posicionreal, lambda: print("player"))
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEBUTTONDOWN and (mouse_x > self.rect_abs[0] and mouse_x < self.rect_abs[0] + self.rect_abs[2]) and (mouse_y > self.rect_abs[1] and mouse_y < self.rect_abs[1] + self.rect_abs[3]):
+                botonE1.handle_event1(event, posicionreal, lambda: print("pro"))
+                botonE2.handle_event1(event, posicionreal, lambda: print("player"))
         
     def activar(self):
         self.estado=True
@@ -867,7 +829,7 @@ class ModuloExigente(Modulo):
         indice_elegido = randint(0, len(self.enunciados)-1)
         self.enunciado = self.enunciados[indice_elegido]
         print(self.enunciado)
- 
+        
     #!Revisar la desactivación
     def desactivar(self):
         self.estado=False
@@ -921,39 +883,39 @@ class CableBasico(Cable):
 class CableRojo(CableBasico): 
     def __init__(self, color, posx, posy) -> None:
         super().__init__(color)
-        self.icono_cable = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_rojo.png")
-        self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_rojo_cortado.png")
+        self.icono_cable = pygame.image.load("src/graphics/Modulo Cables Simples/cable_simple_rojo.png")
+        self.icono_cable_cortado = pygame.image.load("src/graphics/Modulo Cables Simples/cable_simple_rojo_cortado.png")
         self.posx = posx 
         self.posy = posy
-        self.rect = pygame.Rect(self.posx, self.posy, 10, 20)
+        self.rect = pygame.Rect(self.posx, self.posy, 20, 20)
 
 class CableBlanco(CableBasico): 
     def __init__(self, color, posx, posy) -> None:
         super().__init__(color)
-        self.icono_cable = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_blanco.png")
-        self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_blanco_cortado.png")
+        self.icono_cable = pygame.image.load("src/graphics/Modulo Cables Simples/cable_simple_blanco.png")
+        self.icono_cable_cortado = pygame.image.load("src/graphics/Modulo Cables Simples/cable_simple_blanco_cortado.png")
         self.posx = posx 
         self.posy = posy
-        self.rect = pygame.Rect(self.posx, self.posy, 10, 20)
+        self.rect = pygame.Rect(self.posx, self.posy, 20, 20)
 
 class CableNegro(CableBasico): 
     def __init__(self, color, posx, posy) -> None:
         super().__init__(color)
-        self.icono_cable = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_negro.png")
-        self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_negro_cortado.png")
+        self.icono_cable = pygame.image.load("src/graphics/Modulo Cables Simples/cable_simple_negro.png")
+        self.icono_cable_cortado = pygame.image.load("src/graphics/Modulo Cables Simples/cable_simple_negro_cortado.png")
         self.posx = posx 
         self.posy = posy
-        self.rect = pygame.Rect(self.posx, self.posy, 10, 20)
+        self.rect = pygame.Rect(self.posx, self.posy, 20, 20)
 
 
 class CableAzul(CableBasico): 
     def __init__(self, color, posx, posy) -> None:
         super().__init__(color)
-        self.icono_cable = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_azul.png")
-        self.icono_cable_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Simples/cable_simple_azul_cortado.png")
+        self.icono_cable = pygame.image.load("src/graphics/Modulo Cables Simples/cable_simple_azul.png")
+        self.icono_cable_cortado = pygame.image.load("src/graphics/Modulo Cables Simples/cable_simple_azul_cortado.png")
         self.posx = posx 
         self.posy = posy
-        self.rect = pygame.Rect(self.posx, self.posy, 10, 20)
+        self.rect = pygame.Rect(self.posx, self.posy, 20, 20)
 
 class CableComplejo(Cable):
     def __init__(self, color: str, posx, posy) -> None:
@@ -961,26 +923,26 @@ class CableComplejo(Cable):
         self.color= color
         self.conectado_a= None
         self.LED=None
-        self.icono = None
-        self.icono_cortado = None
+        self.icono_cable = None
+        self.icono_cable_cortado = None
         self.icono_led = None
         self.icono_letra = None
         self.posx= posx
         self.posy = posy
-        self.rect = pygame.Rect(self.posx, self.posy, 10, 20)
+        self.rect = pygame.Rect(self.posx, self.posy, 20, 30)
 
         if color == "Naranja":
-            self.icono = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_naranja.png")
-            self.icono_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_naranja_cortado.png")
+            self.icono_cable = pygame.image.load("src/graphics/Modulo Cables Complejos/cable_complejo_naranja.png")
+            self.icono_cable_cortado = pygame.image.load("src/graphics/Modulo Cables Complejos/cable_complejo_naranja_cortado.png")
         elif color == "Morado": 
-            self.icono = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_morado.png")
-            self.icono_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_morado_cortado.png")
+            self.icono_cable = pygame.image.load("src/graphics/Modulo Cables Complejos/cable_complejo_morado.png")
+            self.icono_cable_cortado = pygame.image.load("src/graphics/Modulo Cables Complejos/cable_complejo_morado_cortado.png")
         elif color == "Naranja y Morado": 
-            self.icono = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_naranja_morado.png")
-            self.icono_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_naranja_morado_cortado.png")
+            self.icono_cable = pygame.image.load("src/graphics/Modulo Cables Complejos/cable_complejo_naranja_morado.png")
+            self.icono_cable_cortado = pygame.image.load("src/graphics/Modulo Cables Complejos/cable_complejo_naranja_morado_cortado.png")
         elif color == "Blanco": 
-            self.icono = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_blanco.png")
-            self.icono_cortado = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/cable_complejo_blanco_cortado.png")
+            self.icono_cable = pygame.image.load("src/graphics/Modulo Cables Complejos/cable_complejo_blanco.png")
+            self.icono_cable_cortado = pygame.image.load("src/graphics/Modulo Cables Complejos/cable_complejo_blanco_cortado.png")
         
     def set_estado_cortado(self):
         self.estado=True
@@ -988,18 +950,18 @@ class CableComplejo(Cable):
     def set_conectado_a(self, conexion):
         self.conectado_a= conexion
         if self.conectado_a == "A": 
-            self.icono_letra = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/letra_a.png")
+            self.icono_letra = pygame.image.load("src/graphics/Modulo Cables Complejos/letra_a.png")
             
         elif self.conectado_a == "B": 
-            self.icono_letra = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/letra_b.png")
+            self.icono_letra = pygame.image.load("src/graphics/Modulo Cables Complejos/letra_b.png")
             
 
     def set_estado_LED(self, estado: bool):
         self.LED = estado
         if self.LED: 
-            self.icono_led = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/led_cables_encendido.png")
+            self.icono_led = pygame.image.load("src/graphics/Modulo Cables Complejos/led_cables_encendido.png")
         else: 
-            self.icono_led = pygame.image.load("Laboratorio-3-Estructura/src/graphics/Modulo Cables Complejos/led_cables_apagado.png")
+            self.icono_led = pygame.image.load("src/graphics/Modulo Cables Complejos/led_cables_apagado.png")
 
     
 class Casilla: 
