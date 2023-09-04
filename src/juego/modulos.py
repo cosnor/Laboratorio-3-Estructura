@@ -379,11 +379,17 @@ class ModuloPalabras(Modulo):  #Caso memoria
         elif self.estado_equivocacion: 
             led_rojo = pygame.image.load("src/graphics/LED_MODULOS/LED_rojo_modulo.png")
             pantalla.blit(led_rojo, (0, 0))
-        boton1 = ButtonM(pantalla,30,123,32,47,"1",(0,0,0,0))
-        boton2 = ButtonM(pantalla,65,123,35,47,"2",(0,0,0,0))
-        boton3 = ButtonM(pantalla,103,123,35,47,"3",(0,0,0,0))
-        boton4 = ButtonM(pantalla,140,123,35,47,"4",(0,0,0,0))
+            
+        # boton1 = ButtonM(pantalla,30,123,32,47,"1",(0,0,0,0))
+        # boton2 = ButtonM(pantalla,65,123,35,47,"2",(0,0,0,0))
+        # boton3 = ButtonM(pantalla,103,123,35,47,"3",(0,0,0,0))
+        # boton4 = ButtonM(pantalla,140,123,35,47,"4",(0,0,0,0))
         barra = ButtonM(pantalla, 65, 173, 73, 15, "", (0,0,0,0))
+        boton1 = ButtonN(pantalla,30,123,32,47,Nodo(self.opciones[0], 1))
+        boton2 = ButtonN(pantalla,65,123,35,47, Nodo(self.opciones[1], 2))
+        boton3 = ButtonN(pantalla,103,123,35,47, Nodo(self.opciones[2], 3))
+        boton4 = ButtonN(pantalla,140,123,35,47, Nodo(self.opciones[3], 4))
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -972,3 +978,50 @@ class Nodo:
     def __init__(self, posicion, etiqueta): 
         self.posicion = posicion
         self.etiqueta = etiqueta
+        self.icono_numero = None
+        
+        if self.etiqueta == 1: 
+            
+            if self.posicion == 1: 
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num1_1.png")
+            elif self.posicion == 2: 
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num1_2.png")
+            elif self.posicion == 3:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num1_3.png")
+            elif self.posicion == 4:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num1_4.png")
+                
+        elif self.etiqueta == 2:
+            
+            if self.posicion == 1:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num2_1.png")
+            elif self.posicion == 2:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num2_2.png")
+            elif self.posicion == 3:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num2_3.png")
+            elif self.posicion == 4:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num2_4.png")
+                
+        elif self.etiqueta == 3:
+            
+            if self.posicion == 1: 
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num3_1.png")
+            elif self.posicion == 2:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num3_2.png")
+            elif self.posicion == 3:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num3_3.png")
+            elif self.posicion == 4:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num3_4.png")
+                
+        elif self.etiqueta == 4:
+            
+            if self.posicion == 1: 
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num4_1.png")
+            elif self.posicion == 2:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num4_2.png")
+            elif self.posicion == 3:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num4_3.png")
+            elif self.posicion == 4:
+                self.icono_numero = pygame.image.load("src/graphics/Modulo_Memoria/num4_4.png")
+                
+            

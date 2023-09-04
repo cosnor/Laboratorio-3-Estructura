@@ -73,7 +73,18 @@ class ButtonJ:
                 funcion()
             pygame.time.wait(1)
                 
-                
+
+class ButtonN:
+    def __init__(self, screen1, x, y, width, height,  numero):
+        self.screen1 = screen1 #screen
+        self.numero = numero
+        self.x, self.y = x, y
+        #self.rect_topleft = (self.x+ screen2[0], self.y+ screen2[1])
+        self.width, self.height = width, height
+        #self.rect = pygame.Rect(self.rect_topleft[0], self.rect_topleft[1], self.width, self.height)
+        self.imagen = numero.icono_numero  
+
+
 class ButtonM:
     def __init__(self, screen, x, y, width, height, text, color):
         self.screen = screen
